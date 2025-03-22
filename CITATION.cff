@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+    - alias: "kodetools@mooncloak.com"
+      website: "https://kodetools.mooncloak.codes"
+contact:
+    - alias: "kodetools@mooncloak.com"
+      website: "https://kodetools.mooncloak.codes"
+title: "mooncloak-website"
+type: "software"
+abstract: "Website client UI for mooncloak."
+license: "Apache-2.0"
+keywords:
+    - "mooncloak"
+    - "website"
+repository-code: "https://github.com/mooncloak/mooncloak-website"
+url: "https://github.com/mooncloak/mooncloak-website"
