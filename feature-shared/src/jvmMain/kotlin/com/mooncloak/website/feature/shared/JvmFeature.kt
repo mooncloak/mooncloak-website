@@ -7,6 +7,10 @@ import kotlinx.html.title
 
 public actual interface Feature {
 
+    public actual val packageId: String
+
+    public actual val pathPart: String
+
     public actual val title: String
 
     public actual val canvasElementId: String
