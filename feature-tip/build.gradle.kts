@@ -22,6 +22,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":feature-shared"))
+
+                implementation(compose.components.resources)
             }
         }
 
@@ -38,7 +40,6 @@ kotlin {
 
         val wasmJsMain by getting {
             dependencies {
-                implementation(compose.components.resources)
             }
         }
     }
