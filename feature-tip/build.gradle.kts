@@ -40,6 +40,7 @@ kotlin {
 
         val wasmJsMain by getting {
             dependencies {
+                implementation("com.mooncloak.kodetools.statex:statex-core:_")
             }
         }
     }
