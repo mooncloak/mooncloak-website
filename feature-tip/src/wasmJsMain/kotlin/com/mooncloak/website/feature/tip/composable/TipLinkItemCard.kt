@@ -1,20 +1,13 @@
 package com.mooncloak.website.feature.tip.composable
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -33,54 +26,67 @@ internal fun TipLinkItemCard(
     contentColor: Color = MaterialTheme.colorScheme.onBackground
 ) {
     Card(
-        modifier = modifier,
+        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+            .then(modifier),
         colors = CardDefaults.cardColors(
             containerColor = containerColor,
             contentColor = contentColor
         ),
         onClick = onSelected
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                modifier = Modifier.size(48.dp),
-                painter = item.icon.invoke(),
-                contentDescription = item.contentDescription.invoke(),
-                tint = contentColor
-            )
-
-            Text(
-                modifier = Modifier.padding(top = 16.dp),
-                text = item.title.invoke(),
-                style = MaterialTheme.typography.titleMedium,
-                color = contentColor,
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            Text(
-                modifier = Modifier.padding(top = 8.dp),
-                text = item.description.invoke(),
-                style = MaterialTheme.typography.bodyMedium,
-                color = contentColor.copy(alpha = MooncloakTheme.alphas.secondary),
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            TextButton(
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = contentColor
-                ),
-                onClick = onSelected
-            ) {
-                Text(
-                    text = stringResource(Res.string.tip_link_item_action_tip, item.price),
-                    style = MaterialTheme.typography.titleSmall
+        ListItem(
+            modifier = Modifier.fillMaxWidth(),
+            colors = ListItemDefaults.colors(
+                containerColor = containerColor,
+                headlineColor = contentColor,
+                supportingColor = contentColor
+            ),
+            leadingContent = {
+                Icon(
+                    modifier = Modifier.padding(end = 16.dp)
+                        .size(64.dp),
+                    painter = item.icon.invoke(),
+                    contentDescription = item.contentDescription.invoke(),
+                    tint = contentColor
                 )
+            },
+            headlineContent = {
+                Text(
+                    modifier = Modifier,
+                    text = item.title.invoke(),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = contentColor,
+                    textAlign = TextAlign.Start,
+                    overflow = TextOverflow.Ellipsis
+                )
+            },
+            supportingContent = {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        modifier = Modifier,
+                        text = item.description.invoke(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = contentColor.copy(alpha = MooncloakTheme.alphas.secondary),
+                        textAlign = TextAlign.Start,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    TextButton(
+                        modifier = Modifier.align(Alignment.End),
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = contentColor
+                        ),
+                        onClick = onSelected
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.tip_link_item_action_tip, item.price),
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                    }
+                }
             }
-        }
+        )
     }
 }

@@ -1,17 +1,16 @@
 package com.mooncloak.website.feature.tip
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
-import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
@@ -29,7 +28,7 @@ public fun TipScreen(
 ) {
     val viewModel = remember { TipViewModel() }
     val snackbarHostState = remember { SnackbarHostState() }
-    val lazyListState = rememberLazyStaggeredGridState()
+    val lazyListState = rememberLazyListState()
     val uriHandler = LocalUriHandler.current
 
     val accentColors = remember {
@@ -63,17 +62,19 @@ public fun TipScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Header(
+                    modifier = Modifier.padding(top = 32.dp),
                     title = stringResource(Res.string.collaborator_list_tip_title),
                     description = stringResource(Res.string.collaborator_list_tip_description)
                 )
 
-                LazyVerticalStaggeredGrid(
+                Spacer(modifier = Modifier.height(32.dp))
+
+                LazyColumn(
                     modifier = Modifier.fillMaxWidth()
                         .padding(horizontal = DefaultHorizontalPageSpacing),
                     state = lazyListState,
-                    columns = StaggeredGridCells.Adaptive(minSize = 150.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalItemSpacing = 12.dp
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     itemsIndexed(
                         items = viewModel.state.current.value.items,
@@ -82,8 +83,7 @@ public fun TipScreen(
                     ) { index, link ->
                         TipLinkItemCard(
                             modifier = Modifier.sizeIn(
-                                minHeight = 280.dp,
-                                maxWidth = 400.dp
+                                maxWidth = 600.dp
                             ).fillMaxWidth(),
                             item = link,
                             onSelected = {
@@ -95,8 +95,7 @@ public fun TipScreen(
                     }
 
                     item(
-                        key = "BottomSpacing",
-                        span = StaggeredGridItemSpan.FullLine
+                        key = "BottomSpacing"
                     ) {
                         Spacer(modifier = Modifier.height(32.dp))
                     }
