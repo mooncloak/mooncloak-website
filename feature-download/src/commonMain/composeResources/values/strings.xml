@@ -5,6 +5,11 @@
     <string name="app_slogan_line_1">Go \nDark,</string>
     <string name="app_slogan_line_2">Stay \nBright</string>
 
-    <string name="app_not_released">Application coming soon.</string>
+    <string name="headline_privacy_focused_vpn">Privacy focused VPN.</string>
+    <string name="headline_no_tracking">Zero tracking.</string>
+    <string name="headline_no_logs">No logs.</string>
+    <string name="headline_no_accounts">No accounts required.</string>
+    <string name="headline_hide_ip_address">Hide your IP address.</string>
+    <string name="headline_browse_privately">Browse the web privately.</string>
 
 </resources>
