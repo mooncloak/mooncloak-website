@@ -11,6 +11,12 @@ public expect interface Feature {
     // ex: Download the mooncloak VPN app!
     public val title: String
 
+    // ex: mooncloak application download page.
+    public val description: String?
+
+    // ex: listOf("vpn", "app")
+    public val keywords: List<String>
+
     // ex: feature-download
     public val canvasElementId: String
 

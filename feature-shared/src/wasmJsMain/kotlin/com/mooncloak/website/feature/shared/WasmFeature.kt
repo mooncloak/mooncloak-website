@@ -12,6 +12,10 @@ public actual interface Feature {
 
     public actual val title: String
 
+    public actual val description: String?
+
+    public actual val keywords: List<String>
+
     public actual val canvasElementId: String
 
     @Composable
