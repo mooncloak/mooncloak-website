@@ -1,11 +1,24 @@
 package com.mooncloak.website.feature.download.layout
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import com.mikepenz.hypnoticcanvas.shaderBackground
 import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
@@ -15,6 +28,7 @@ import com.mooncloak.website.feature.download.composable.*
 import com.mooncloak.website.feature.download.composable.HeaderSection
 import com.mooncloak.website.feature.download.model.HeadlineTextGroup
 import com.mooncloak.website.feature.download.model.HeadlineTextItem
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.absoluteValue
 
@@ -55,6 +69,7 @@ public fun DownloadLayout(
         )
     )
     val pagerState = rememberPagerState(pageCount = { headlineTextGroups.size })
+    val coroutineScope = rememberCoroutineScope()
 
     BoxWithConstraints(modifier = modifier) {
         Box(
@@ -94,5 +109,34 @@ public fun DownloadLayout(
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
         )
+
+        AnimatedVisibility(
+            modifier = Modifier.align(Alignment.BottomEnd)
+                .padding(32.dp),
+            visible = pagerState.canScrollForward && maxWidth >= 600.dp,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            IconButton(
+                modifier = Modifier.background(
+                    color = MooncloakColorPalette.MooncloakDarkPrimary.copy(alpha = 0.68f),
+                    shape = CircleShape
+                ).pointerHoverIcon(PointerIcon.Hand),
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(
+                            page = (pagerState.targetPage + 1).coerceAtMost(pagerState.pageCount)
+                        )
+                    }
+                }
+            ) {
+                Icon(
+                    modifier = Modifier.size(64.dp),
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = "Next page",
+                    tint = Color.White
+                )
+            }
+        }
     }
 }
