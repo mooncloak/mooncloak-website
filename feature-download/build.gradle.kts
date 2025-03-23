@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("mooncloak.multiplatform")
     id("mooncloak.publish")
+    id("mooncloak.publishWebApp")
 }
 
 kotlin {

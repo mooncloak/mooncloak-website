@@ -13,3 +13,23 @@ plugins {
 
 group = buildVariables.group
 version = buildVariables.version
+
+// A task that publishes the maven artifacts and the web app binaries for all the feature modules.
+//
+// NOTE: Each feature module must have the "mooncloak.publish" and "mooncloak.publishWebApp" Gradle plugins installed.
+tasks.register("release") {
+    group = "mooncloak"
+    description = "Publishes the maven artifacts and the web app binaries."
+
+    val subProjectPublishTasks = subprojects.filter { subproject ->
+        subproject.plugins.hasPlugin("mooncloak.publish")
+    }.map { subproject -> subproject.tasks.named("publish") }
+
+    dependsOn(subProjectPublishTasks)
+
+    val subProjectPublishWebAppTasks = subprojects.filter { subproject ->
+        subproject.plugins.hasPlugin("mooncloak.publishWebApp")
+    }.map { subproject -> subproject.tasks.named("publishWebApp") }
+
+    dependsOn(subProjectPublishWebAppTasks)
+}
