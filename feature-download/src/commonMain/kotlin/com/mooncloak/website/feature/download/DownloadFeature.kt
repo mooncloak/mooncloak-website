@@ -2,6 +2,9 @@ package com.mooncloak.website.feature.download
 
 import com.mooncloak.website.feature.shared.Feature
 
+public val Feature.Companion.Download: DownloadFeature
+    inline get() = DownloadFeature
+
 public expect object DownloadFeature : BaseDownloadFeature
 
 public abstract class BaseDownloadFeature internal constructor() : Feature {
