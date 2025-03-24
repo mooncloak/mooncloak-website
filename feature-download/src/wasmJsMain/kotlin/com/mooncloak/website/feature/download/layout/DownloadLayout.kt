@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.mikepenz.hypnoticcanvas.shaderBackground
 import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
@@ -26,6 +27,7 @@ import com.mooncloak.moonscape.theme.MooncloakColorPalette
 import com.mooncloak.website.feature.download.*
 import com.mooncloak.website.feature.download.composable.*
 import com.mooncloak.website.feature.download.composable.HeaderSection
+import com.mooncloak.website.feature.download.model.DownloadAppPageItem
 import com.mooncloak.website.feature.download.model.HeadlineTextGroup
 import com.mooncloak.website.feature.download.model.HeadlineTextItem
 import kotlinx.coroutines.launch
@@ -36,7 +38,7 @@ import kotlin.math.absoluteValue
 public fun DownloadLayout(
     modifier: Modifier = Modifier
 ) {
-    val headlineTextGroups = listOf(
+    val pages = listOf(
         HeadlineTextGroup(
             items = listOf(
                 HeadlineTextItem(
@@ -66,10 +68,12 @@ public fun DownloadLayout(
                 HeadlineTextItem(text = stringResource(Res.string.headline_hide_ip_address)),
                 HeadlineTextItem(text = stringResource(Res.string.headline_browse_privately))
             )
-        )
+        ),
+        DownloadAppPageItem
     )
-    val pagerState = rememberPagerState(pageCount = { headlineTextGroups.size })
+    val pagerState = rememberPagerState(pageCount = { pages.size })
     val coroutineScope = rememberCoroutineScope()
+    val uriHandler = LocalUriHandler.current
 
     BoxWithConstraints(modifier = modifier) {
         Box(
@@ -92,22 +96,34 @@ public fun DownloadLayout(
             modifier = Modifier.fillMaxSize()
                 .padding(horizontal = 32.dp),
             state = pagerState
-        ) { page ->
+        ) { pageIndex ->
             val pageOffset = pagerState.currentPageOffsetFraction.absoluteValue
 
-            HeadlineTextSection(
-                modifier = Modifier.fillMaxWidth()
-                    .height(maxHeight)
-                    .padding(vertical = 32.dp),
-                group = headlineTextGroups[page],
-                alpha = 1f - pageOffset.coerceIn(0f, 1f)
-            )
+            when (val page = pages[pageIndex]) {
+                is HeadlineTextGroup -> HeadlineTextSection(
+                    modifier = Modifier.fillMaxWidth()
+                        .height(maxHeight)
+                        .padding(vertical = 32.dp),
+                    group = page,
+                    alpha = 1f - pageOffset.coerceIn(0f, 1f)
+                )
+
+                is DownloadAppPageItem -> DownloadAppSection(
+                    modifier = Modifier.fillMaxWidth()
+                        .height(maxHeight)
+                        .padding(vertical = 32.dp),
+                    onDownload = {
+                        uriHandler.openUri("https://play.google.com/store/apps/details?id=com.mooncloak.vpn.app.android.play")
+                    }
+                )
+            }
         }
 
         HeaderSection(
             modifier = Modifier.padding(horizontal = 16.dp)
                 .fillMaxWidth()
-                .align(Alignment.TopCenter)
+                .align(Alignment.TopCenter),
+            uriHandler = uriHandler
         )
 
         AnimatedVisibility(

@@ -1,4 +1,4 @@
-# mooncloak-we
+# mooncloak-website
 
 The mooncloak website UI.
 

@@ -12,4 +12,6 @@
     <string name="headline_hide_ip_address">Hide your IP address.</string>
     <string name="headline_browse_privately">Browse the web privately.</string>
 
+    <string name="action_try_now">Try it now!</string>
+
 </resources>
