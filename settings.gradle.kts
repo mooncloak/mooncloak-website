@@ -37,3 +37,4 @@ rootProject.name = "mooncloak-website"
 include(":feature-shared")
 include(":feature-download")
 include(":feature-tip")
+include(":feature-billing")

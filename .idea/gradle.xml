@@ -21,6 +21,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/build-logic" />
+            <option value="$PROJECT_DIR$/feature-billing" />
             <option value="$PROJECT_DIR$/feature-download" />
             <option value="$PROJECT_DIR$/feature-shared" />
             <option value="$PROJECT_DIR$/feature-tip" />
