@@ -17,12 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import com.mooncloak.moonscape.snackbar.MooncloakSnackbar
 import com.mooncloak.moonscape.snackbar.showSuccess
+import com.mooncloak.website.feature.billing.api.BillingApi
 
 @Composable
 internal fun BillingScreen(
+    billingApi: BillingApi,
     modifier: Modifier = Modifier
 ) {
-    val viewModel = remember { BillingViewModel() }
+    val viewModel = remember { BillingViewModel(billingApi = billingApi) }
     val snackbarHostState = remember { SnackbarHostState() }
     val uriHandler = LocalUriHandler.current
 

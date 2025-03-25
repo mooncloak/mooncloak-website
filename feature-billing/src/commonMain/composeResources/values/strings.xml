@@ -1,0 +1,5 @@
+<resources>
+
+    <string name="error_loading_billing">There was an unexpected error loading the billing information.</string>
+
+</resources>

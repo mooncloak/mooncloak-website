@@ -59,6 +59,10 @@ kotlin {
                 // https://github.com/mooncloak/textx
                 // Apache 2.0: https://github.com/mooncloak/textx/blob/main/LICENSE
                 api("com.mooncloak.kodetools.textx:textx-core:_")
+
+                // Logging
+                // https://github.com/mooncloak/logpile
+                api("com.mooncloak.kodetools.logpile:logpile-core:_")
             }
         }
     }
