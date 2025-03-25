@@ -1,5 +1,46 @@
 <resources>
 
+    <string name="site_name">mooncloak</string>
+
     <string name="error_loading_billing">There was an unexpected error loading the billing information.</string>
+    <string name="error_refreshing_status">There was an unexpected error retrieving the current payment status.</string>
+    <string name="error_loading_crypto_details">There was an unexpected error loading payment details.</string>
+
+    <string name="success_copied_address">Copied address</string>
+    <string name="success_status_refreshed">Status refreshed</string>
+    <string name="success_copied_token">Copied token</string>
+
+    <string name="action_pay_with_card">Pay with card</string>
+    <string name="action_pay_with_crypto">Pay with crypto</string>
+    <string name="action_open_wallet_app">Open wallet</string>
+    <string name="action_copy_address">Copy address</string>
+    <string name="action_copy_token">Copy token</string>
+    <string name="action_navigate_home">Go home</string>
+    <string name="action_navigate_back">Go back</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_open_app">Open app</string>
+
+    <string name="title_loading_product_details">Loading product details...</string>
+    <string name="title_success">Thank you for your payment!</string>
+
+    <string name="label_qr_scan">Scan to pay with your crypto wallet app.</string>
+    <string name="label_crypto_address">Crypto Address</string>
+    <string name="label_copy_crypto_address">Copy crypto address</string>
+    <string name="label_payment_status">Payment Status</string>
+    <string name="label_payment_status_pending">Pending Payment</string>
+    <string name="label_payment_loading">Loading details</string>
+    <string name="label_success_token">Transaction Token</string>
+
+    <string name="crypto_name_bitcoin">Bitcoin</string>
+    <string name="crypto_name_ethereum">Ethereum</string>
+    <string name="crypto_name_lunaris">Lunaris</string>
+    <string name="crypto_name_monero">Monero</string>
+
+    <string name="crypto_ticker_bitcoin">BTC</string>
+    <string name="crypto_ticker_ethereum">ETH</string>
+    <string name="crypto_ticker_lunaris">LNRS</string>
+    <string name="crypto_ticker_monero">XMR</string>
+
+    <string name="crypto_name_and_ticker">%1$s (%2$s)</string>
 
 </resources>

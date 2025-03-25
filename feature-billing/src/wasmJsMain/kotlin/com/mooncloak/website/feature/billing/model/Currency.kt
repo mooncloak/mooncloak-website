@@ -36,7 +36,7 @@ public data class Currency public constructor(
     }
 }
 
-public val Currency.USD: Currency get() = usdSingleton
+public val Currency.Companion.USD: Currency get() = usdSingleton
 
 private val usdSingleton = Currency(
     type = Currency.Type.Iso4217,

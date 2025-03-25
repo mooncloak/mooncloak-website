@@ -3,9 +3,7 @@ package com.mooncloak.website.feature.billing.api
 import com.mooncloak.kodetools.apix.core.ExperimentalApixApi
 import com.mooncloak.kodetools.apix.core.HttpResponseBody
 import com.mooncloak.kodetools.apix.core.getOrThrow
-import com.mooncloak.website.feature.billing.model.PaymentLink
-import com.mooncloak.website.feature.billing.model.PaymentLinkResponseBody
-import com.mooncloak.website.feature.billing.model.Plan
+import com.mooncloak.website.feature.billing.model.*
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -25,10 +23,36 @@ internal class HttpBillingApi internal constructor(
         return@withContext response.body<HttpResponseBody<Plan>>().getOrThrow()
     }
 
-    override suspend fun getPaymentLinks(): List<PaymentLink> = withContext(Dispatchers.Default) {
-        val response = httpClient.get(url("/billing/payment-links"))
+    override suspend fun getInvoice(productId: String, token: String?, currencyCode: String): CryptoInvoice =
+        withContext(Dispatchers.Default) {
+            val response = httpClient.post(url("/billing/invoice")) {
+                token?.let { bearerAuth(it) }
 
-        return@withContext response.body<HttpResponseBody<PaymentLinkResponseBody>>().getOrThrow().paymentLinks
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+
+                setBody(
+                    GetPaymentInvoiceRequestBody(
+                        planId = productId,
+                        currencyCode = currencyCode
+                    )
+                )
+            }
+
+            return@withContext response.body<HttpResponseBody<CryptoInvoice>>().getOrThrow()
+        }
+
+    override suspend fun getPaymentStatus(
+        token: TransactionToken
+    ): PlanPaymentStatus = withContext(Dispatchers.Default) {
+        val response = httpClient.get(url("/billing/status")) {
+            bearerAuth(token.value)
+
+            contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
+        }
+
+        return@withContext response.body<HttpResponseBody<PlanPaymentStatus>>().getOrThrow()
     }
 
     private suspend fun url(vararg path: String, encodeSlash: Boolean = false): Url {

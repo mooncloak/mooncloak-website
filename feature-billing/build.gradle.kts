@@ -63,6 +63,13 @@ kotlin {
                 // Logging
                 // https://github.com/mooncloak/logpile
                 api("com.mooncloak.kodetools.logpile:logpile-core:_")
+
+                // UI QR Codes - qrose
+                // https://github.com/alexzhirkevich/qrose
+                // MIT: https://github.com/alexzhirkevich/qrose/blob/main/LICENSE
+                implementation("io.github.alexzhirkevich:qrose:_")
+
+                implementation(compose.materialIconsExtended)
             }
         }
     }
