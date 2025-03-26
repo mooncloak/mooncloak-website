@@ -140,6 +140,7 @@ internal fun BillingScreen(
                         modifier = Modifier.fillMaxSize()
                             .padding(16.dp),
                         token = viewModel.state.current.value.paymentStatus?.token,
+                        redirectUri = viewModel.state.current.value.redirectUri,
                         onCopiedToken = {
                             coroutineScope.launch {
                                 snackbarHostState.showSuccess(message = getString(Res.string.success_copied_token))

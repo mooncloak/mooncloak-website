@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -30,6 +29,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun SuccessLayout(
     token: TransactionToken?,
+    redirectUri: String?,
     onCopiedToken: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -110,16 +110,11 @@ internal fun SuccessLayout(
                     .fillMaxWidth()
                     .padding(top = 32.dp)
                     .pointerHoverIcon(PointerIcon.Hand),
+                enabled = redirectUri != null,
                 onClick = {
-                    val uri = buildString {
-                        append("https://mooncloak.com/payment/result")
-
-                        if (token != null) {
-                            append("?token=${token.value}")
-                        }
+                    redirectUri?.let {
+                        uriHandler.openUri(it)
                     }
-
-                    uriHandler.openUri(uri)
                 }
             ) {
                 Text(

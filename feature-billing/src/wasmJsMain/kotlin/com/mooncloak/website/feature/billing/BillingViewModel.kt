@@ -6,6 +6,7 @@ import com.mooncloak.kodetools.statex.ViewModel
 import com.mooncloak.moonscape.snackbar.NotificationStateModel
 import com.mooncloak.website.feature.billing.api.BillingApi
 import com.mooncloak.website.feature.billing.model.*
+import io.ktor.http.*
 import kotlinx.browser.window
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -156,6 +157,31 @@ public class BillingViewModel public constructor(
                     val paymentStatus = invoice?.let {
                         billingApi.getPaymentStatus(token = invoice.token)
                     }
+                    var redirectUri: String? = null
+
+                    if (paymentStatus is PlanPaymentStatus.Completed) {
+                        val queryString = window.location.search
+                        val token = paymentStatus.token?.value
+                        redirectUri = buildString {
+                            append("https://mooncloak.com/payment/result")
+
+                            if (token != null && queryString.isNotBlank()) {
+                                append("?")
+                            }
+
+                            if (token != null) {
+                                append("token=${token}")
+                            }
+
+                            if (queryString.isNotBlank()) {
+                                if (token != null) {
+                                    append("&")
+                                }
+
+                                append(queryString.removePrefix("?"))
+                            }
+                        }
+                    }
 
                     emit { current ->
                         current.copy(
@@ -163,7 +189,8 @@ public class BillingViewModel public constructor(
                             invoices = current.invoices.toMutableMap()
                                 .apply { this[currency] = invoice }
                                 .toMap(),
-                            paymentStatus = paymentStatus
+                            paymentStatus = paymentStatus,
+                            redirectUri = redirectUri
                         )
                     }
                 } catch (e: Exception) {

@@ -7,6 +7,7 @@ import com.mooncloak.website.feature.billing.model.*
 @Immutable
 public data class BillingStateModel public constructor(
     public val billingCardPaymentUri: String = "https://mooncloak.com/billing/fiat",
+    public val redirectUri: String? = null,
     public val startDestination: BillingDestination = BillingDestination.Landing,
     public val selectedCryptoCurrency: SupportedCryptoCurrency = SupportedCryptoCurrency.Lunaris,
     public val cryptoCurrencies: Set<SupportedCryptoCurrency> = SupportedCryptoCurrency.orderedSet,
