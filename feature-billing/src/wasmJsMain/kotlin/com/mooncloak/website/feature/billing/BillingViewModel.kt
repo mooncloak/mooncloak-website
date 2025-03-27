@@ -5,20 +5,31 @@ import com.mooncloak.kodetools.logpile.core.error
 import com.mooncloak.kodetools.statex.ViewModel
 import com.mooncloak.moonscape.snackbar.NotificationStateModel
 import com.mooncloak.website.feature.billing.api.BillingApi
-import com.mooncloak.website.feature.billing.external.QueryParameters
-import com.mooncloak.website.feature.billing.external.URLSearchParams
-import com.mooncloak.website.feature.billing.external.get
-import com.mooncloak.website.feature.billing.external.parameters
+import com.mooncloak.website.feature.billing.crypto.CryptoChainlinkAddressProvider
+import com.mooncloak.website.feature.billing.crypto.CryptoUSDPriceFetcher
+import com.mooncloak.website.feature.billing.external.*
 import com.mooncloak.website.feature.billing.model.*
+import com.mooncloak.website.feature.billing.util.format
 import kotlinx.browser.window
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.getString
+import kotlin.math.pow
+import kotlin.random.Random
+import kotlin.time.Duration.Companion.minutes
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 public class BillingViewModel public constructor(
-    private val billingApi: BillingApi
+    private val billingApi: BillingApi,
+    private val clock: Clock,
+    private val priceFetcher: CryptoUSDPriceFetcher,
+    private val addressProvider: CryptoChainlinkAddressProvider
 ) : ViewModel<BillingStateModel>(
     initialStateValue = BillingStateModel()
 ) {
@@ -44,8 +55,8 @@ public class BillingViewModel public constructor(
 
                     token = queryParameters["token"]
 
-                    val productDeferred = async { productId?.let { billingApi.getPlan(id = it) } }
-                    val plansDeferred = async { billingApi.getPlans().sortedBy { it.price.amount } }
+                    val productDeferred = async { getPlan(id = productId) }
+                    val plansDeferred = async { getPlans() }
 
                     val currentState = state.current.value
                     val currency = currentState.selectedCryptoCurrency
@@ -233,4 +244,77 @@ public class BillingViewModel public constructor(
             }
         }
     }
+
+    private suspend fun getPlans(): List<Plan> =
+        billingApi.getPlans()
+            .filter { plan -> plan.isAvailable(at = clock.now()) }
+            .sortedBy { plan -> plan.price.amount }
+
+    private suspend fun getPlan(id: String?): Plan? =
+        id?.let { billingApi.getPlan(id = it) }
+
+    @OptIn(ExperimentalUuidApi::class)
+    private suspend fun loadInvoice(currency: CryptoCurrency, plan: Plan): CryptoInvoice =
+        withContext(Dispatchers.Default) {
+            // Ensure plan is available
+            require(plan.isAvailable()) { "Plan '${plan.id}' is not available for purchase." }
+
+            // Extract USD amount from plan.price (assumed in cents)
+            val usdAmount = plan.price.amount / 100.0 // e.g., 800L -> 8.0
+
+            // Fetch crypto price in USD
+            val cryptoUsdPrice = priceFetcher.fetch(currency)
+                ?: throw IllegalStateException("Could not fetch price for currency '$currency'.")
+
+            // Calculate crypto amount with 10% buffer for gas
+            val cryptoAmountRaw = (usdAmount / cryptoUsdPrice) * 1.10
+            val decimals = when (currency) {
+                CryptoCurrency.USDC, CryptoCurrency.Tether -> 6
+                CryptoCurrency.POL, CryptoCurrency.Lunaris -> 18
+            }
+            val cryptoAmountScaled = (cryptoAmountRaw * 10.0.pow(decimals.toDouble())).toLong()
+
+            // Crypto Currency model
+            val cryptoCurrency = Currency(
+                type = Currency.Type.Crypto,
+                code = Currency.Code(currency.currencyCode)
+            )
+
+            // Prices
+            val usdPrice = plan.price // Already in USD
+            val cryptoPrice = Price(
+                amount = cryptoAmountScaled,
+                currency = cryptoCurrency
+            )
+
+            // Generate payment URI
+            val weiAmount = cryptoAmountScaled.toString()
+            val tokenAddress = addressProvider[currency]
+                ?: throw IllegalArgumentException("No address found for '$currency'.")
+            val uri =
+                "ethereum:$CONTRACT_ADDRESS@137?value=$weiAmount&function=payWithToken(address token, uint256 amount)&address=$tokenAddress&uint256=$weiAmount"
+
+            // Invoice fields
+            val now = Clock.System.now()
+            val token = TransactionToken(value = "txn-${Random.nextInt(1000000)}")
+
+            CryptoInvoice(
+                type = "crypto_payment",
+                id = Uuid.random().toHexString(),
+                planId = plan.id,
+                token = token,
+                created = now,
+                expires = now + 15.minutes,
+                uri = uri,
+                amount = usdPrice,
+                cryptoAmount = cryptoPrice,
+                address = CONTRACT_ADDRESS,
+                label = "Subscription Payment for plan ${plan.title}",
+                message = "Pay ${plan.price.format()} in ${currency.name} for plan ${plan.title}",
+                crypto = cryptoCurrency
+            )
+        }
 }
+
+// FIXME:
+private const val CONTRACT_ADDRESS = "0xYourSubscriptionContractAddress"

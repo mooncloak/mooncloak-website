@@ -16,12 +16,14 @@ import com.mooncloak.moonscape.theme.MooncloakTheme
 import com.mooncloak.website.feature.billing.Res
 import com.mooncloak.website.feature.billing.model.Plan
 import com.mooncloak.website.feature.billing.title_loading_product_details
+import com.mooncloak.website.feature.billing.title_select_plan
 import com.mooncloak.website.feature.billing.util.format
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SelectedPlanCard(
     plan: Plan?,
+    loading: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -43,7 +45,7 @@ internal fun SelectedPlanCard(
                         modifier = Modifier.width(64.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (targetPlan == null) {
+                        if (loading) {
                             CircularProgressIndicator()
                         } else {
                             Text(
@@ -58,7 +60,11 @@ internal fun SelectedPlanCard(
             headlineContent = {
                 Text(
                     modifier = Modifier.wrapContentSize(),
-                    text = plan?.title ?: stringResource(Res.string.title_loading_product_details),
+                    text = plan?.title ?: if (loading) {
+                        stringResource(Res.string.title_loading_product_details)
+                    } else {
+                        stringResource(Res.string.title_select_plan)
+                    },
                     style = MaterialTheme.typography.titleMedium.copy(
                         lineBreak = LineBreak.Heading
                     ),

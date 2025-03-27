@@ -9,15 +9,22 @@ import com.mooncloak.moonscape.theme.MooncloakTheme
 import com.mooncloak.website.feature.billing.api.HostUrlProvider
 import com.mooncloak.website.feature.billing.api.HttpBillingApi
 import com.mooncloak.website.feature.billing.api.Mooncloak
+import com.mooncloak.website.feature.billing.crypto.CryptoChainlinkAddressProvider
+import com.mooncloak.website.feature.billing.crypto.CryptoUSDPriceFetcher
+import com.mooncloak.website.feature.billing.crypto.Default
+import com.mooncloak.website.feature.billing.crypto.invoke
 import io.ktor.client.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
 public actual object BillingFeature : BaseBillingFeature() {
+
+    private val clock = Clock.System
 
     private val json: Json = Json {
         ignoreUnknownKeys = true
@@ -78,12 +85,18 @@ public actual object BillingFeature : BaseBillingFeature() {
         hostUrlProvider = HostUrlProvider.Mooncloak
     )
 
+    private val addressProvider = CryptoChainlinkAddressProvider.Default
+    private val priceFetcher = CryptoUSDPriceFetcher.invoke(addressProvider = addressProvider)
+
     @Composable
     override fun Content() {
         MooncloakTheme {
             BillingScreen(
                 modifier = Modifier.fillMaxSize(),
-                billingApi = billingApi
+                billingApi = billingApi,
+                clock = clock,
+                priceFetcher = priceFetcher,
+                addressProvider = addressProvider
             )
         }
     }

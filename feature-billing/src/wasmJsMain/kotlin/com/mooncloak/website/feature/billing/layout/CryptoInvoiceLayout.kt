@@ -66,7 +66,8 @@ internal fun CryptoInvoiceLayout(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.sizeIn(maxWidth = 400.dp)
+                .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
             Button(

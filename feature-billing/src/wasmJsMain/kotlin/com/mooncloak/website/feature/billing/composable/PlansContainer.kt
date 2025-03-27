@@ -61,6 +61,7 @@ internal fun PlansContainer(
                 modifier = Modifier.fillMaxWidth()
                     .pointerHoverIcon(PointerIcon.Hand),
                 plan = selectedPlan,
+                loading = selectedPlan == null && plans.isEmpty(),
                 onClick = {
                     dropdownExpanded.value = true
                 }

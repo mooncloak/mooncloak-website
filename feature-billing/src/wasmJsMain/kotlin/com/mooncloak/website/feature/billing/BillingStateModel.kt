@@ -11,7 +11,7 @@ public data class BillingStateModel public constructor(
     public val billingCardPaymentUri: String = "https://mooncloak.com/billing/fiat",
     public val redirectUri: String? = null,
     public val startDestination: BillingDestination = BillingDestination.Landing,
-    public val selectedCryptoCurrency: CryptoCurrency = CryptoCurrency.Lunaris,
+    public val selectedCryptoCurrency: CryptoCurrency = CryptoCurrency.orderedSet.first(),
     public val cryptoCurrencies: Set<CryptoCurrency> = CryptoCurrency.orderedSet,
     public val invoices: Map<CryptoCurrency, CryptoInvoice?> = emptyMap(),
     public val paymentStatus: PlanPaymentStatus? = null,

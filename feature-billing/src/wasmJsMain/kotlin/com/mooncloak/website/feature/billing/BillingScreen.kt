@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.mooncloak.moonscape.snackbar.MooncloakSnackbar
 import com.mooncloak.moonscape.snackbar.showSuccess
 import com.mooncloak.website.feature.billing.api.BillingApi
+import com.mooncloak.website.feature.billing.crypto.CryptoChainlinkAddressProvider
+import com.mooncloak.website.feature.billing.crypto.CryptoUSDPriceFetcher
 import com.mooncloak.website.feature.billing.layout.LandingLayout
 import com.mooncloak.website.feature.billing.layout.PayWithCryptoLayout
 import com.mooncloak.website.feature.billing.layout.SuccessLayout
@@ -22,6 +24,7 @@ import com.mooncloak.website.feature.billing.model.BillingDestination
 import com.mooncloak.website.feature.billing.model.PlanPaymentStatus
 import com.mooncloak.website.feature.shared.composable.MooncloakTopAppBar
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -29,9 +32,19 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun BillingScreen(
     billingApi: BillingApi,
+    clock: Clock,
+    priceFetcher: CryptoUSDPriceFetcher,
+    addressProvider: CryptoChainlinkAddressProvider,
     modifier: Modifier = Modifier
 ) {
-    val viewModel = remember { BillingViewModel(billingApi = billingApi) }
+    val viewModel = remember {
+        BillingViewModel(
+            billingApi = billingApi,
+            clock = clock,
+            priceFetcher = priceFetcher,
+            addressProvider = addressProvider
+        )
+    }
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val uriHandler = LocalUriHandler.current

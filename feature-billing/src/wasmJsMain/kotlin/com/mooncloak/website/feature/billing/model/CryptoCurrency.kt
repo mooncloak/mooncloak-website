@@ -11,7 +11,6 @@ public enum class CryptoCurrency(
     public val currencyCode: String
 ) {
 
-
     // Bitcoin(order = 1, currencyCode = "BTC"),
     // Ethereum(order = 2, currencyCode = "ETH"),
     // Monero(order = 3, currencyCode = "XMR"),
