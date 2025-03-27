@@ -6,34 +6,26 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.mooncloak.moonscape.snackbar.MooncloakSnackbar
 import com.mooncloak.moonscape.snackbar.showSuccess
-import com.mooncloak.moonscape.theme.MooncloakColorPalette
 import com.mooncloak.website.feature.billing.api.BillingApi
-import com.mooncloak.website.feature.shared.composable.MooncloakTooltipBox
 import com.mooncloak.website.feature.billing.layout.LandingLayout
 import com.mooncloak.website.feature.billing.layout.PayWithCryptoLayout
 import com.mooncloak.website.feature.billing.layout.SuccessLayout
 import com.mooncloak.website.feature.billing.model.BillingDestination
 import com.mooncloak.website.feature.billing.model.PlanPaymentStatus
+import com.mooncloak.website.feature.shared.composable.MooncloakTopAppBar
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BillingScreen(
     billingApi: BillingApi,
@@ -52,58 +44,16 @@ internal fun BillingScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(Res.string.site_name))
+            MooncloakTopAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                logo = painterResource(Res.drawable.ic_logo_mooncloak),
+                displayBack = destination.value == BillingDestination.PayWithCrypto,
+                onBack = {
+                    destination.value = BillingDestination.Landing
                 },
-                navigationIcon = {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        AnimatedVisibility(
-                            visible = destination.value == BillingDestination.PayWithCrypto,
-                            enter = fadeIn(),
-                            exit = fadeOut()
-                        ) {
-                            MooncloakTooltipBox(
-                                text = stringResource(Res.string.action_navigate_back)
-                            ) {
-                                IconButton(
-                                    modifier = Modifier.padding(end = 8.dp)
-                                        .pointerHoverIcon(PointerIcon.Hand),
-                                    onClick = {
-                                        destination.value = BillingDestination.Landing
-                                    }
-                                ) {
-                                    Icon(
-                                        modifier = Modifier.padding(4.dp)
-                                            .size(24.dp)
-                                            .clip(CircleShape),
-                                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                        contentDescription = stringResource(Res.string.action_navigate_back)
-                                    )
-                                }
-                            }
-                        }
-
-                        MooncloakTooltipBox(
-                            text = stringResource(Res.string.action_navigate_home)
-                        ) {
-                            Image(
-                                modifier = Modifier.size(48.dp)
-                                    .clip(MaterialTheme.shapes.large)
-                                    .background(MooncloakColorPalette.MooncloakDarkPrimary)
-                                    .clickable {
-                                        uriHandler.openUri("https://mooncloak.com")
-                                    }
-                                    .pointerHoverIcon(PointerIcon.Hand),
-                                painter = painterResource(Res.drawable.ic_logo_mooncloak),
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
+                siteName = stringResource(Res.string.site_name),
+                backContentDescription = stringResource(Res.string.action_navigate_back),
+                homeContentDescription = stringResource(Res.string.action_navigate_home)
             )
         },
         snackbarHost = {
