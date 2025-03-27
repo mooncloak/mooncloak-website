@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.mooncloak.moonscape.theme.MooncloakTheme
 import com.mooncloak.website.feature.billing.*
 import com.mooncloak.website.feature.billing.composable.MooncloakTooltipBox
-import com.mooncloak.website.feature.billing.model.SupportedCryptoCurrency
+import com.mooncloak.website.feature.billing.model.CryptoCurrency
 import com.mooncloak.website.feature.billing.model.title
 import io.github.alexzhirkevich.qrose.options.QrBrush
 import io.github.alexzhirkevich.qrose.options.solid
@@ -42,12 +42,12 @@ internal fun CryptoInvoiceLayout(
     paymentStatusTitle: String,
     paymentStatusDescription: String?,
     paymentStatusPending: Boolean,
-    selectedCurrency: SupportedCryptoCurrency,
-    currencies: Collection<SupportedCryptoCurrency>,
+    selectedCurrency: CryptoCurrency,
+    currencies: Collection<CryptoCurrency>,
     onOpenWallet: () -> Unit,
     onCopiedAddress: () -> Unit,
     onRefreshStatus: () -> Unit,
-    onCurrencySelected: (currency: SupportedCryptoCurrency) -> Unit,
+    onCurrencySelected: (currency: CryptoCurrency) -> Unit,
     actionOpenVisible: Boolean = true,
     actionOpenEnabled: Boolean = true,
     actionRefreshVisible: Boolean = true,

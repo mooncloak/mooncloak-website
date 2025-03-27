@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mooncloak.website.feature.billing.model.SupportedCryptoCurrency
+import com.mooncloak.website.feature.billing.model.CryptoCurrency
 
 @Composable
 internal fun PayWithCryptoLayout(
@@ -17,12 +17,12 @@ internal fun PayWithCryptoLayout(
     paymentStatusTitle: String,
     paymentStatusDescription: String?,
     paymentStatusPending: Boolean,
-    selectedCurrency: SupportedCryptoCurrency,
-    currencies: Collection<SupportedCryptoCurrency>,
+    selectedCurrency: CryptoCurrency,
+    currencies: Collection<CryptoCurrency>,
     onCopiedAddress: () -> Unit,
     onOpenWallet: () -> Unit,
     onRefreshStatus: () -> Unit,
-    onCurrencySelected: (currency: SupportedCryptoCurrency) -> Unit,
+    onCurrencySelected: (currency: CryptoCurrency) -> Unit,
     modifier: Modifier = Modifier,
     actionOpenVisible: Boolean = true,
     actionOpenEnabled: Boolean = true,

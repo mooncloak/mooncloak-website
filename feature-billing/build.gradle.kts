@@ -70,6 +70,11 @@ kotlin {
                 implementation("io.github.alexzhirkevich:qrose:_")
 
                 implementation(compose.materialIconsExtended)
+
+                // Ethereum Blockchain Scanning - ethers.js
+                // https://github.com/ethers-io/ethers.js
+                // MIT: https://github.com/ethers-io/ethers.js?tab=MIT-1-ov-file#readme
+                implementation(npm("ethers", "_"))
             }
         }
     }

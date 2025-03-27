@@ -6,7 +6,6 @@ import com.mooncloak.kodetools.statex.ViewModel
 import com.mooncloak.moonscape.snackbar.NotificationStateModel
 import com.mooncloak.website.feature.billing.api.BillingApi
 import com.mooncloak.website.feature.billing.model.*
-import io.ktor.http.*
 import kotlinx.browser.window
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -94,7 +93,7 @@ public class BillingViewModel public constructor(
         }
     }
 
-    public fun selectCurrency(currency: SupportedCryptoCurrency) {
+    public fun selectCurrency(currency: CryptoCurrency) {
         coroutineScope.launch {
             mutex.withLock {
                 try {

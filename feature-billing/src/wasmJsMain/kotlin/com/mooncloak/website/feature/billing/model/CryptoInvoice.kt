@@ -38,7 +38,7 @@ import kotlinx.serialization.Serializable
  *
  * @property [message] A message to display to the user, providing additional information about the payment.
  *
- * @property [crypto] The [CryptoCurrency] model for the cryptocurrency for this invoice.
+ * @property [crypto] The [Currency] model for the cryptocurrency for this invoice.
  */
 @Immutable
 @Serializable
@@ -55,5 +55,5 @@ public data class CryptoInvoice public constructor(
     @SerialName(value = "address") public val address: String,
     @SerialName(value = "label") public val label: String? = null,
     @SerialName(value = "message") public val message: String? = null,
-    @SerialName(value = "crypto") public val crypto: CryptoCurrency? = null
+    @SerialName(value = "crypto") public val crypto: Currency? = null
 )
