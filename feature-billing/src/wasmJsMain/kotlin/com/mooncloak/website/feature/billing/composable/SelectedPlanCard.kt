@@ -3,12 +3,9 @@ package com.mooncloak.website.feature.billing.composable
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.LineBreak
@@ -19,23 +16,22 @@ import com.mooncloak.moonscape.theme.MooncloakTheme
 import com.mooncloak.website.feature.billing.Res
 import com.mooncloak.website.feature.billing.model.Plan
 import com.mooncloak.website.feature.billing.title_loading_product_details
+import com.mooncloak.website.feature.billing.util.format
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun ProductCard(
+internal fun SelectedPlanCard(
     plan: Plan?,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val formattedPrice = remember(plan) { mutableStateOf<String?>(null) }
-
-    LaunchedEffect(plan) {
-        // TODO: Handle formatting locally if it is not provided from the API.
-        formattedPrice.value = plan?.price?.formatted
-    }
-
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors()
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        onClick = onClick
     ) {
         ListItem(
             modifier = Modifier.fillMaxWidth(),
@@ -50,9 +46,10 @@ internal fun ProductCard(
                         if (targetPlan == null) {
                             CircularProgressIndicator()
                         } else {
-                            Icon(
-                                imageVector = Icons.Default.ShoppingCart,
-                                contentDescription = null
+                            Text(
+                                text = plan?.price?.format() ?: "",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -60,12 +57,12 @@ internal fun ProductCard(
             },
             headlineContent = {
                 Text(
-                    modifier = Modifier.wrapContentSize()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    modifier = Modifier.wrapContentSize(),
                     text = plan?.title ?: stringResource(Res.string.title_loading_product_details),
                     style = MaterialTheme.typography.titleMedium.copy(
                         lineBreak = LineBreak.Heading
                     ),
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Start
@@ -73,21 +70,21 @@ internal fun ProductCard(
             },
             supportingContent = (@Composable {
                 Text(
-                    modifier = Modifier.padding(top = 16.dp),
+                    modifier = Modifier.padding(top = 8.dp),
                     text = plan?.description?.value ?: "",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         lineBreak = LineBreak.Paragraph
                     ),
-                    color = LocalContentColor.current.copy(alpha = MooncloakTheme.alphas.secondary)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = MooncloakTheme.alphas.secondary)
                 )
             }).takeIf { !plan?.description?.value.isNullOrBlank() },
             trailingContent = (@Composable {
-                Text(
-                    text = formattedPrice.value ?: "",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
-            }).takeIf { !formattedPrice.value.isNullOrBlank() }
+            })
         )
     }
 }

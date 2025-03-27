@@ -42,8 +42,7 @@ internal fun SuccessLayout(
     ) {
         Column(
             modifier = Modifier.sizeIn(maxWidth = 600.dp)
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             GenericHeaderGraphic(

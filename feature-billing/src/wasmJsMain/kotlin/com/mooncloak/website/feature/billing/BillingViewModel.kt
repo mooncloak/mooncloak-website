@@ -5,6 +5,10 @@ import com.mooncloak.kodetools.logpile.core.error
 import com.mooncloak.kodetools.statex.ViewModel
 import com.mooncloak.moonscape.snackbar.NotificationStateModel
 import com.mooncloak.website.feature.billing.api.BillingApi
+import com.mooncloak.website.feature.billing.external.QueryParameters
+import com.mooncloak.website.feature.billing.external.URLSearchParams
+import com.mooncloak.website.feature.billing.external.get
+import com.mooncloak.website.feature.billing.external.parameters
 import com.mooncloak.website.feature.billing.model.*
 import kotlinx.browser.window
 import kotlinx.coroutines.async
@@ -12,7 +16,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.jetbrains.compose.resources.getString
-import org.w3c.dom.url.URLSearchParams
 
 public class BillingViewModel public constructor(
     private val billingApi: BillingApi
@@ -25,19 +28,24 @@ public class BillingViewModel public constructor(
     public fun load() {
         coroutineScope.launch {
             mutex.withLock {
-                var product: Plan? = null
+                var selectedPlan: Plan? = null
                 var token: String? = null
                 var invoice: CryptoInvoice? = null
                 var paymentStatus: PlanPaymentStatus? = null
+                var queryParameters = QueryParameters()
+                var plans = emptyList<Plan>()
 
                 try {
                     emit { current -> current.copy(isLoading = true) }
 
-                    val queryParameters = URLSearchParams(window.location.search.toJsString())
-                    val productId = queryParameters.get("product_id")
-                    token = queryParameters.get("token")
+                    queryParameters = URLSearchParams(window.location.search.toJsString()).parameters()
 
-                    val productDeferred = async { productId?.let { billingApi.getProduct(id = it) } }
+                    val productId = queryParameters["product_id"] ?: queryParameters["plan_id"]
+
+                    token = queryParameters["token"]
+
+                    val productDeferred = async { productId?.let { billingApi.getPlan(id = it) } }
+                    val plansDeferred = async { billingApi.getPlans().sortedBy { it.price.amount } }
 
                     val currentState = state.current.value
                     val currency = currentState.selectedCryptoCurrency
@@ -45,7 +53,7 @@ public class BillingViewModel public constructor(
                     invoice = currentState.invoices[currency]
                     paymentStatus = currentState.paymentStatus
 
-                    val invoiceJob = async {
+                    val invoiceDeferred = async {
                         if (invoice == null && productId != null) {
                             invoice = billingApi.getInvoice(
                                 productId = productId,
@@ -54,23 +62,26 @@ public class BillingViewModel public constructor(
                             )
                         }
 
-                        paymentStatus = invoice?.let {
+                        invoice?.let {
                             billingApi.getPaymentStatus(token = it.token)
                         }
                     }
 
-                    product = productDeferred.await()
-                    invoiceJob.await()
+                    selectedPlan = productDeferred.await()
+                    paymentStatus = invoiceDeferred.await()
+                    plans = plansDeferred.await()
 
                     emit { current ->
                         current.copy(
                             isLoading = false,
-                            product = product,
+                            selectedPlan = selectedPlan,
+                            plans = plans,
                             token = token,
                             invoices = current.invoices.toMutableMap()
                                 .apply { this[currency] = invoice }
                                 .toMap(),
-                            paymentStatus = paymentStatus
+                            paymentStatus = paymentStatus,
+                            queryParameters = queryParameters
                         )
                     }
                 } catch (e: Exception) {
@@ -82,12 +93,26 @@ public class BillingViewModel public constructor(
                     emit { current ->
                         current.copy(
                             isLoading = false,
-                            product = product,
+                            selectedPlan = selectedPlan,
+                            plans = plans,
                             token = token,
                             paymentStatus = paymentStatus,
+                            queryParameters = queryParameters,
                             errorMessage = NotificationStateModel(message = getString(Res.string.error_loading_billing))
                         )
                     }
+                }
+            }
+        }
+    }
+
+    public fun selectPlan(plan: Plan?) {
+        coroutineScope.launch {
+            mutex.withLock {
+                emit { current ->
+                    current.copy(
+                        selectedPlan = plan
+                    )
                 }
             }
         }
@@ -105,7 +130,7 @@ public class BillingViewModel public constructor(
                     }
 
                     val currentState = state.current.value
-                    val productId = currentState.product?.id
+                    val productId = currentState.selectedPlan?.id
                     var invoice = currentState.invoices[currency]
 
                     if (invoice == null && productId != null) {

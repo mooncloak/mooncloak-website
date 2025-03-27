@@ -34,8 +34,7 @@ internal fun PayWithCryptoLayout(
     ) {
         CryptoInvoiceLayout(
             modifier = Modifier.sizeIn(maxWidth = 600.dp)
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             uri = uri,
             address = address,
             paymentStatusTitle = paymentStatusTitle,

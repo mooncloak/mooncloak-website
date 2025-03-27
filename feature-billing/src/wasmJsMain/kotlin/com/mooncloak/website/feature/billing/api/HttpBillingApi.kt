@@ -17,11 +17,18 @@ internal class HttpBillingApi internal constructor(
     private val hostUrlProvider: HostUrlProvider
 ) : BillingApi {
 
-    override suspend fun getProduct(id: String): Plan = withContext(Dispatchers.Default) {
+    override suspend fun getPlan(id: String): Plan = withContext(Dispatchers.Default) {
         val response = httpClient.get(url("/billing/plan/$id"))
 
         return@withContext response.body<HttpResponseBody<Plan>>().getOrThrow()
     }
+
+    override suspend fun getPlans(): List<Plan> =
+        withContext(Dispatchers.Default) {
+            val response = httpClient.get(url("/billing/plans"))
+
+            return@withContext response.body<HttpResponseBody<AvailablePlans>>().getOrThrow().plans
+        }
 
     override suspend fun getInvoice(productId: String, token: String?, currencyCode: String): CryptoInvoice =
         withContext(Dispatchers.Default) {

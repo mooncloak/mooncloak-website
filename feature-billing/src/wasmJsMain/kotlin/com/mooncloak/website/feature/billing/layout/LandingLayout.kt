@@ -14,16 +14,18 @@ import androidx.compose.ui.unit.dp
 import com.mooncloak.website.feature.billing.Res
 import com.mooncloak.website.feature.billing.action_pay_with_card
 import com.mooncloak.website.feature.billing.action_pay_with_crypto
-import com.mooncloak.website.feature.billing.composable.ProductCard
+import com.mooncloak.website.feature.billing.composable.PlansContainer
 import com.mooncloak.website.feature.billing.model.Plan
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun LandingLayout(
-    product: Plan?,
+    selectedPlan: Plan?,
+    plans: List<Plan>,
     onPayWithCard: () -> Unit,
     onPayWithCrypto: () -> Unit,
+    onPlanSelected: (plan: Plan) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -32,14 +34,15 @@ internal fun LandingLayout(
     ) {
         Column(
             modifier = Modifier.sizeIn(maxWidth = 600.dp)
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProductCard(
-                modifier = Modifier.sizeIn(maxWidth = 400.dp)
+            PlansContainer(
+                modifier = Modifier.sizeIn(maxWidth = 600.dp)
                     .fillMaxWidth(),
-                plan = product
+                selectedPlan = selectedPlan,
+                plans = plans,
+                onPlanSelected = onPlanSelected
             )
 
             Spacer(

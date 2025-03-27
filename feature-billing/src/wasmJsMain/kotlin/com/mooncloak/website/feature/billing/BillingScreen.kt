@@ -77,13 +77,15 @@ internal fun BillingScreen(
                     BillingDestination.Landing -> LandingLayout(
                         modifier = Modifier.fillMaxSize()
                             .padding(16.dp),
-                        product = viewModel.state.current.value.product,
+                        selectedPlan = viewModel.state.current.value.selectedPlan,
+                        plans = viewModel.state.current.value.plans,
                         onPayWithCard = {
                             uriHandler.openUri(viewModel.state.current.value.billingCardPaymentUri)
                         },
                         onPayWithCrypto = {
                             destination.value = BillingDestination.PayWithCrypto
-                        }
+                        },
+                        onPlanSelected = viewModel::selectPlan
                     )
 
                     BillingDestination.Success -> SuccessLayout(

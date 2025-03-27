@@ -30,6 +30,7 @@
     <string name="label_payment_status_pending">Pending Payment</string>
     <string name="label_payment_loading">Loading details</string>
     <string name="label_success_token">Transaction Token</string>
+    <string name="label_selected_plan">Selected Plan</string>
 
     <string name="crypto_name_bitcoin">Bitcoin</string>
     <string name="crypto_name_ethereum">Ethereum</string>
@@ -48,5 +49,12 @@
     <string name="crypto_ticker_usdt">USDT</string>
 
     <string name="crypto_name_and_ticker">%1$s (%2$s)</string>
+
+    <string name="payment_label_one_time_charge">&#47; One-Time</string>
+
+    <string name="payment_all_plans_title">All plans include:</string>
+    <string name="payment_all_plans_feature_data_usage">Unlimited data usage</string>
+    <string name="payment_all_plans_feature_anonymous_service">Anonymous no logs VPN service</string>
+    <string name="payment_all_plans_feature_all_servers">Access to all VPN servers</string>
 
 </resources>
