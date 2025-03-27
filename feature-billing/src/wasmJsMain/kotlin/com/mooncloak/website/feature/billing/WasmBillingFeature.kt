@@ -9,10 +9,7 @@ import com.mooncloak.moonscape.theme.MooncloakTheme
 import com.mooncloak.website.feature.billing.api.HostUrlProvider
 import com.mooncloak.website.feature.billing.api.HttpBillingApi
 import com.mooncloak.website.feature.billing.api.Mooncloak
-import com.mooncloak.website.feature.billing.crypto.CryptoChainlinkAddressProvider
-import com.mooncloak.website.feature.billing.crypto.CryptoUSDPriceFetcher
-import com.mooncloak.website.feature.billing.crypto.Default
-import com.mooncloak.website.feature.billing.crypto.invoke
+import com.mooncloak.website.feature.billing.crypto.*
 import io.ktor.client.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -85,8 +82,17 @@ public actual object BillingFeature : BaseBillingFeature() {
         hostUrlProvider = HostUrlProvider.Mooncloak
     )
 
+    private val cryptoRpc = CryptoRpc(
+        httpClient = httpClient,
+        rpcUrl = "https://mooncloak.com/api/billing/crypto/rpc",
+        json = json
+    )
+
     private val addressProvider = CryptoChainlinkAddressProvider.Default
-    private val priceFetcher = CryptoUSDPriceFetcher.invoke(addressProvider = addressProvider)
+    private val priceFetcher = CryptoUSDPriceFetcher(
+        addressProvider = addressProvider,
+        cryptoRpc = cryptoRpc
+    )
 
     @Composable
     override fun Content() {

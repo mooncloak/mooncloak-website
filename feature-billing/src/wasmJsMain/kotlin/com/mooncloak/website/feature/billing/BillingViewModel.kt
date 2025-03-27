@@ -95,6 +95,11 @@ public class BillingViewModel public constructor(
                             queryParameters = queryParameters
                         )
                     }
+
+                    loadInvoice(
+                        currency = CryptoCurrency.POL,
+                        plan = selectedPlan ?: plans.first()
+                    )
                 } catch (e: Exception) {
                     LogPile.error(
                         message = "Error retrieving billing information.",
