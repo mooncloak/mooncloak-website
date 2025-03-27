@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mooncloak.moonscape.theme.MooncloakTheme
 import com.mooncloak.website.feature.billing.*
-import com.mooncloak.website.feature.billing.composable.MooncloakTooltipBox
+import com.mooncloak.website.feature.shared.composable.MooncloakTooltipBox
 import com.mooncloak.website.feature.billing.model.CryptoCurrency
 import com.mooncloak.website.feature.billing.model.ticker
 import io.github.alexzhirkevich.qrose.options.QrBrush

@@ -22,7 +22,7 @@ import com.mooncloak.moonscape.snackbar.MooncloakSnackbar
 import com.mooncloak.moonscape.snackbar.showSuccess
 import com.mooncloak.moonscape.theme.MooncloakColorPalette
 import com.mooncloak.website.feature.billing.api.BillingApi
-import com.mooncloak.website.feature.billing.composable.MooncloakTooltipBox
+import com.mooncloak.website.feature.shared.composable.MooncloakTooltipBox
 import com.mooncloak.website.feature.billing.layout.LandingLayout
 import com.mooncloak.website.feature.billing.layout.PayWithCryptoLayout
 import com.mooncloak.website.feature.billing.layout.SuccessLayout

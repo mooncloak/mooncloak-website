@@ -1,4 +1,4 @@
-package com.mooncloak.website.feature.billing.composable
+package com.mooncloak.website.feature.shared.composable
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PlainTooltip

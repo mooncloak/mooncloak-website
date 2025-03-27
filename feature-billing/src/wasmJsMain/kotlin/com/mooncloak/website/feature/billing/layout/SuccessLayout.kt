@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mooncloak.website.feature.billing.*
 import com.mooncloak.website.feature.billing.composable.GenericHeaderGraphic
-import com.mooncloak.website.feature.billing.composable.MooncloakTooltipBox
+import com.mooncloak.website.feature.shared.composable.MooncloakTooltipBox
 import com.mooncloak.website.feature.billing.model.TransactionToken
 import org.jetbrains.compose.resources.stringResource
 
