@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -28,7 +31,7 @@ import com.mooncloak.moonscape.theme.MooncloakTheme
 import com.mooncloak.website.feature.billing.*
 import com.mooncloak.website.feature.billing.composable.MooncloakTooltipBox
 import com.mooncloak.website.feature.billing.model.CryptoCurrency
-import com.mooncloak.website.feature.billing.model.title
+import com.mooncloak.website.feature.billing.model.ticker
 import io.github.alexzhirkevich.qrose.options.QrBrush
 import io.github.alexzhirkevich.qrose.options.solid
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
@@ -56,30 +59,64 @@ internal fun CryptoInvoiceLayout(
     val clipboardManager = LocalClipboardManager.current
     val containerQrBrush = QrBrush.solid(MaterialTheme.colorScheme.surface)
     val contentQrBrush = QrBrush.solid(MaterialTheme.colorScheme.onSurface)
+    val dropdownExpanded = remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SingleChoiceSegmentedButtonRow(
-            modifier = Modifier.height(IntrinsicSize.Max)
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
         ) {
-            currencies.forEach { currency ->
-                SegmentedButton(
-                    modifier = Modifier.fillMaxHeight()
-                        .pointerHoverIcon(PointerIcon.Hand),
-                    selected = currency == selectedCurrency,
-                    shape = MaterialTheme.shapes.medium,
-                    onClick = {
-                        onCurrencySelected.invoke(currency)
-                    },
-                    icon = {},
-                    label = {
-                        Text(
-                            text = currency.title
-                        )
-                    }
+            Button(
+                modifier = Modifier.sizeIn(maxWidth = 400.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.Center)
+                    .pointerHoverIcon(PointerIcon.Hand),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                ),
+                onClick = {
+                    dropdownExpanded.value = true
+                }
+            ) {
+                Text(
+                    text = "(${selectedCurrency.ticker}) ${selectedCurrency.name}"
                 )
+
+                Icon(
+                    modifier = Modifier.padding(start = 16.dp),
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            DropdownMenu(
+                modifier = Modifier.sizeIn(maxWidth = 400.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
+                expanded = dropdownExpanded.value,
+                onDismissRequest = { dropdownExpanded.value = false },
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                currencies.forEach { currency ->
+                    DropdownMenuItem(
+                        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                        text = {
+                            Text(
+                                text = "(${currency.ticker}) ${currency.name}"
+                            )
+                        },
+                        onClick = {
+                            onCurrencySelected.invoke(currency)
+
+                            dropdownExpanded.value = false
+                        }
+                    )
+                }
             }
         }
 

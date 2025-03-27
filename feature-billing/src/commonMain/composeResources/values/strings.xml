@@ -37,6 +37,7 @@
     <string name="crypto_name_monero">Monero</string>
     <string name="crypto_name_pol">Polygon Ecosystem Token</string>
     <string name="crypto_name_usdc">USD Coin</string>
+    <string name="crypto_name_usdt">Tether</string>
 
     <string name="crypto_ticker_bitcoin">BTC</string>
     <string name="crypto_ticker_ethereum">ETH</string>
@@ -44,6 +45,7 @@
     <string name="crypto_ticker_monero">XMR</string>
     <string name="crypto_ticker_pol">POL</string>
     <string name="crypto_ticker_usdc">USDC</string>
+    <string name="crypto_ticker_usdt">USDT</string>
 
     <string name="crypto_name_and_ticker">%1$s (%2$s)</string>
 
