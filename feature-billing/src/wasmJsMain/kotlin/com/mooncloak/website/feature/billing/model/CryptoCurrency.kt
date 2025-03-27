@@ -14,7 +14,7 @@ public enum class CryptoCurrency(
     Lunaris(order = 0, currencyCode = "LNRS"),
     Bitcoin(order = 1, currencyCode = "BTC"),
     Ethereum(order = 2, currencyCode = "ETH"),
-    Matic(order = 3, currencyCode = "MATIC"),
+    POL(order = 3, currencyCode = "POL"),
     USDC(order = 4, currencyCode = "USDC");
 
     public companion object
@@ -26,6 +26,8 @@ public val CryptoCurrency.title: String
         CryptoCurrency.Bitcoin -> stringResource(Res.string.crypto_name_bitcoin)
         CryptoCurrency.Ethereum -> stringResource(Res.string.crypto_name_ethereum)
         CryptoCurrency.Lunaris -> stringResource(Res.string.crypto_name_lunaris)
+        CryptoCurrency.POL -> stringResource(Res.string.crypto_name_pol)
+        CryptoCurrency.USDC -> stringResource(Res.string.crypto_name_usdc)
     }
 
 public val CryptoCurrency.ticker: String
@@ -34,6 +36,8 @@ public val CryptoCurrency.ticker: String
         CryptoCurrency.Bitcoin -> stringResource(Res.string.crypto_ticker_bitcoin)
         CryptoCurrency.Ethereum -> stringResource(Res.string.crypto_ticker_ethereum)
         CryptoCurrency.Lunaris -> stringResource(Res.string.crypto_ticker_lunaris)
+        CryptoCurrency.POL -> stringResource(Res.string.crypto_ticker_pol)
+        CryptoCurrency.USDC -> stringResource(Res.string.crypto_ticker_usdc)
     }
 
 public val CryptoCurrency.Companion.orderedSet: Set<CryptoCurrency>

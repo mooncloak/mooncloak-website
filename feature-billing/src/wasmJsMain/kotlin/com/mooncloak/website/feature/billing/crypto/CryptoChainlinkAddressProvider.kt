@@ -16,7 +16,7 @@ private object DefaultCryptoChainlinkAddressProvider : CryptoChainlinkAddressPro
 
     // Chainlink Price Feed addresses on Polygon
     private val priceFeeds = mapOf(
-        CryptoCurrency.Matic to "0xAB594600376Ec9fD91F8e885dADF0CE036862dE0", // MATIC/USD
+        CryptoCurrency.POL to "0xAB594600376Ec9fD91F8e885dADF0CE036862dE0", // MATIC/USD
         CryptoCurrency.USDC to "0xfE4A8cc5b5B2366C1B58Bea3858e81843581b2F7"   // USDC/USD
         // LNRS not included as it lacks a public Chainlink feed
     )
