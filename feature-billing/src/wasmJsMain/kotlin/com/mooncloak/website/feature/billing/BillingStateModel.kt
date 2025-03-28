@@ -9,7 +9,7 @@ import com.mooncloak.website.feature.billing.util.format
 @Immutable
 public data class BillingStateModel public constructor(
     public val queryParameters: QueryParameters = QueryParameters(),
-    public val billingCardPaymentUri: String = "https://mooncloak.com/billing/fiat",
+    public val billingCardPaymentUri: String = "https://mooncloak.com/billing/payment",
     public val redirectUri: String? = null,
     public val startDestination: BillingDestination = BillingDestination.Landing,
     public val selectedCryptoCurrency: CryptoCurrency = CryptoCurrency.orderedSet.first(),
