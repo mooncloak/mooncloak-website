@@ -112,6 +112,7 @@ internal fun BillingScreen(
                             .padding(16.dp),
                         uri = viewModel.state.current.value.invoice?.paymentUri,
                         address = viewModel.state.current.value.invoice?.address,
+                        priceTitle = viewModel.state.current.value.priceText,
                         paymentStatusTitle = viewModel.state.current.value.paymentStatusDetails?.title
                             ?: stringResource(Res.string.label_payment_loading),
                         paymentStatusPending = viewModel.state.current.value.paymentStatusDetails?.status?.let { status ->

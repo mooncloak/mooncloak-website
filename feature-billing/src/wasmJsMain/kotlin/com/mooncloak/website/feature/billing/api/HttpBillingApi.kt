@@ -30,7 +30,7 @@ internal class HttpBillingApi internal constructor(
             return@withContext response.body<HttpResponseBody<AvailablePlans>>().getOrThrow().plans
         }
 
-    override suspend fun getInvoice(productId: String, token: String?, currencyCode: String): CryptoInvoice =
+    override suspend fun getInvoice(productId: String, token: String?, currencyCode: Currency.Code): CryptoInvoice =
         withContext(Dispatchers.Default) {
             val response = httpClient.post(url("/billing/invoice")) {
                 token?.let { bearerAuth(it) }

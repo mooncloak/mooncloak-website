@@ -8,18 +8,22 @@ import org.jetbrains.compose.resources.stringResource
 @Immutable
 public enum class CryptoCurrency(
     public val order: Int,
-    public val currencyCode: String
+    public val currencyCode: Currency.Code
 ) {
 
     // Bitcoin(order = 1, currencyCode = "BTC"),
     // Ethereum(order = 2, currencyCode = "ETH"),
     // Monero(order = 3, currencyCode = "XMR"),
-    POL(order = 0, currencyCode = "POL"),
-    Lunaris(order = 1, currencyCode = "LNRS"),
-    USDC(order = 2, currencyCode = "USDC"),
-    Tether(order = 3, currencyCode = "USDT");
+    POL(order = 0, currencyCode = Currency.Code(value = "POL")),
+    Lunaris(order = 1, currencyCode = Currency.Code(value = "LNRS")),
+    USDC(order = 2, currencyCode = Currency.Code(value = "USDC")),
+    Tether(order = 3, currencyCode = Currency.Code(value = "USDT"));
 
-    public companion object
+    public companion object {
+
+        public operator fun get(code: Currency.Code): CryptoCurrency? =
+            CryptoCurrency.entries.firstOrNull { it.currencyCode == code }
+    }
 }
 
 public val CryptoCurrency.title: String

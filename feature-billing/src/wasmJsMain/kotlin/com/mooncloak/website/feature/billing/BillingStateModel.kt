@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import com.mooncloak.moonscape.snackbar.NotificationStateModel
 import com.mooncloak.website.feature.billing.external.QueryParameters
 import com.mooncloak.website.feature.billing.model.*
+import com.mooncloak.website.feature.billing.util.format
 
 @Immutable
 public data class BillingStateModel public constructor(
@@ -25,3 +26,12 @@ public data class BillingStateModel public constructor(
 
 public val BillingStateModel.invoice: CryptoInvoice?
     inline get() = invoices[selectedCryptoCurrency]
+
+public val BillingStateModel.priceText: String?
+    inline get() {
+        val invoice = this.invoice ?: return null
+        val localFormatted = invoice.amount.format()
+        val cryptoFormatted = invoice.cryptoAmount.format()
+
+        return "$localFormatted - $cryptoFormatted"
+    }

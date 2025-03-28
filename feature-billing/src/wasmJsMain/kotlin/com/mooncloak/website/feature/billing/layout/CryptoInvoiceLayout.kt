@@ -42,6 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun CryptoInvoiceLayout(
     uri: String?,
     address: String?,
+    priceTitle: String?,
     paymentStatusTitle: String,
     paymentStatusDescription: String?,
     paymentStatusPending: Boolean,
@@ -196,7 +197,7 @@ internal fun CryptoInvoiceLayout(
 
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(top = 16.dp)
+                    .padding(top = 8.dp)
                     .border(
                         width = 1.dp,
                         color = MaterialTheme.colorScheme.outline,
@@ -241,6 +242,30 @@ internal fun CryptoInvoiceLayout(
 
         Spacer(modifier = Modifier.weight(1f))
 
+        if (!priceTitle.isNullOrBlank()) {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(top = 32.dp)
+            ) {
+                Text(
+                    modifier = Modifier.wrapContentSize()
+                        .align(Alignment.Start),
+                    text = stringResource(Res.string.label_payment_price),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = MooncloakTheme.alphas.secondary)
+                )
+
+                Text(
+                    text = priceTitle,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+
         Column(
             modifier = Modifier.fillMaxWidth()
                 .padding(top = 32.dp)
@@ -257,7 +282,7 @@ internal fun CryptoInvoiceLayout(
 
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(top = 16.dp),
+                    .padding(top = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(

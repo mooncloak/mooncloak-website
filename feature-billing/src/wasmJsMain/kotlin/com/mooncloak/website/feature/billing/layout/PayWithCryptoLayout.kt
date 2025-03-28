@@ -14,6 +14,7 @@ import com.mooncloak.website.feature.billing.model.CryptoCurrency
 internal fun PayWithCryptoLayout(
     uri: String?,
     address: String?,
+    priceTitle: String?,
     paymentStatusTitle: String,
     paymentStatusDescription: String?,
     paymentStatusPending: Boolean,
@@ -37,6 +38,7 @@ internal fun PayWithCryptoLayout(
                 .fillMaxWidth(),
             uri = uri,
             address = address,
+            priceTitle = priceTitle,
             paymentStatusTitle = paymentStatusTitle,
             paymentStatusPending = paymentStatusPending,
             paymentStatusDescription = paymentStatusDescription,

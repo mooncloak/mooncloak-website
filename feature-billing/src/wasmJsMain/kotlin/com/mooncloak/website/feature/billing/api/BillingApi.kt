@@ -11,7 +11,7 @@ public interface BillingApi {
     public suspend fun getInvoice(
         productId: String,
         token: String?,
-        currencyCode: String
+        currencyCode: Currency.Code
     ): CryptoInvoice
 
     public suspend fun getPaymentStatus(

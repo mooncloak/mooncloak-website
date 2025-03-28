@@ -54,10 +54,11 @@ public class BillingViewModel public constructor(
 
                     val invoiceDeferred = async {
                         if (invoice == null && productId != null) {
-                            invoice = billingApi.getInvoice(
+                            invoice = getInvoice(
                                 productId = productId,
                                 token = currentState.token,
-                                currencyCode = currentState.selectedCryptoCurrency.currencyCode
+                                currencyCode = currentState.selectedCryptoCurrency.currencyCode,
+                                currentInvoices = currentState.invoices
                             )
                         }
 
@@ -133,10 +134,11 @@ public class BillingViewModel public constructor(
                     var invoice = currentState.invoices[currency]
 
                     if (invoice == null && productId != null) {
-                        invoice = billingApi.getInvoice(
+                        invoice = getInvoice(
                             productId = productId,
                             token = currentState.token,
-                            currencyCode = currentState.selectedCryptoCurrency.currencyCode
+                            currencyCode = currentState.selectedCryptoCurrency.currencyCode,
+                            currentInvoices = currentState.invoices
                         )
                     }
 
@@ -240,4 +242,21 @@ public class BillingViewModel public constructor(
 
     private suspend fun getPlan(id: String?): Plan? =
         id?.let { billingApi.getPlan(id = it) }
+
+    private suspend fun getInvoice(
+        currencyCode: Currency.Code,
+        productId: String?,
+        token: String?,
+        currentInvoices: Map<CryptoCurrency, CryptoInvoice?>
+    ): CryptoInvoice? {
+        CryptoCurrency[currencyCode]?.let { currentInvoices[it] }?.let { return it }
+
+        if (productId == null) return null
+
+        return billingApi.getInvoice(
+            productId = productId,
+            token = token,
+            currencyCode = currencyCode
+        )
+    }
 }
