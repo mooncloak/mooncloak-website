@@ -14,7 +14,7 @@ public data class BillingStateModel public constructor(
     public val selectedCryptoCurrency: CryptoCurrency = CryptoCurrency.orderedSet.first(),
     public val cryptoCurrencies: Set<CryptoCurrency> = CryptoCurrency.orderedSet,
     public val invoices: Map<CryptoCurrency, CryptoInvoice?> = emptyMap(),
-    public val paymentStatus: PlanPaymentStatus? = null,
+    public val paymentStatusDetails: BillingPaymentStatusDetails? = null,
     public val selectedPlan: Plan? = null,
     public val plans: List<Plan> = emptyList(),
     public val token: String? = null,

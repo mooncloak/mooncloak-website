@@ -23,7 +23,7 @@ import kotlinx.serialization.Serializable
  *
  * @property [expires] The [Instant] that this invoice expires and is no longer valid.
  *
- * @property [uri] The URI [String] to open a wallet to pay for the plan. For instance, this would be a BIP 21 URI for
+ * @property [paymentUri] The URI [String] to open a wallet to pay for the plan. For instance, this would be a BIP 21 URI for
  * Bitcoin.
  *
  * @property [amount] The [Price] model representing the amount required to complete this transaction in the local
@@ -38,7 +38,7 @@ import kotlinx.serialization.Serializable
  *
  * @property [message] A message to display to the user, providing additional information about the payment.
  *
- * @property [crypto] The [Currency] model for the cryptocurrency for this invoice.
+ * @property [crypto] The crypto [Currency] model for the cryptocurrency for this invoice.
  */
 @Immutable
 @Serializable
@@ -49,7 +49,7 @@ public data class CryptoInvoice public constructor(
     @SerialName(value = "token") public val token: TransactionToken,
     @SerialName(value = "created") public val created: Instant,
     @SerialName(value = "expires") public val expires: Instant? = null,
-    @SerialName(value = "uri") public val uri: String,
+    @SerialName(value = "payment_uri") public val paymentUri: String,
     @SerialName(value = "amount") public val amount: Price,
     @SerialName(value = "crypto_amount") public val cryptoAmount: Price,
     @SerialName(value = "address") public val address: String,

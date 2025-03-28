@@ -9,7 +9,10 @@ public data class Currency public constructor(
     @SerialName(value = "code") public val code: Code,
     @SerialName(value = "default_fraction_digits") public val defaultFractionDigits: Int? = null,
     @SerialName(value = "numeric_code") public val numericCode: Int? = null,
-    @SerialName(value = "symbol") public val symbol: String? = null
+    @SerialName(value = "symbol") public val symbol: String? = null,
+    @SerialName(value = "name") public val name: String? = null,
+    @SerialName(value = "ticker") public val ticker: String? = null,
+    @SerialName(value = "chain_id") public val chainId: Long? = null
 ) {
 
     @Serializable

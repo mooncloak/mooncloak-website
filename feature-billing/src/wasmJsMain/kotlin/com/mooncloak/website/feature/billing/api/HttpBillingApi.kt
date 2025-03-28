@@ -51,7 +51,7 @@ internal class HttpBillingApi internal constructor(
 
     override suspend fun getPaymentStatus(
         token: TransactionToken
-    ): PlanPaymentStatus = withContext(Dispatchers.Default) {
+    ): BillingPaymentStatusDetails = withContext(Dispatchers.Default) {
         val response = httpClient.get(url("/billing/status")) {
             bearerAuth(token.value)
 
@@ -59,7 +59,7 @@ internal class HttpBillingApi internal constructor(
             accept(ContentType.Application.Json)
         }
 
-        return@withContext response.body<HttpResponseBody<PlanPaymentStatus>>().getOrThrow()
+        return@withContext response.body<HttpResponseBody<BillingPaymentStatusDetails>>().getOrThrow()
     }
 
     private suspend fun url(vararg path: String, encodeSlash: Boolean = false): Url {

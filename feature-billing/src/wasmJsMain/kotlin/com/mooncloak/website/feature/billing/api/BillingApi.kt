@@ -16,7 +16,7 @@ public interface BillingApi {
 
     public suspend fun getPaymentStatus(
         token: TransactionToken
-    ): PlanPaymentStatus
+    ): BillingPaymentStatusDetails
 
     public companion object
 }

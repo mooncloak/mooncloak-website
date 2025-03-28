@@ -15,13 +15,11 @@ import androidx.compose.ui.unit.dp
 import com.mooncloak.moonscape.snackbar.MooncloakSnackbar
 import com.mooncloak.moonscape.snackbar.showSuccess
 import com.mooncloak.website.feature.billing.api.BillingApi
-import com.mooncloak.website.feature.billing.crypto.CryptoChainlinkAddressProvider
-import com.mooncloak.website.feature.billing.crypto.CryptoUSDPriceFetcher
 import com.mooncloak.website.feature.billing.layout.LandingLayout
 import com.mooncloak.website.feature.billing.layout.PayWithCryptoLayout
 import com.mooncloak.website.feature.billing.layout.SuccessLayout
 import com.mooncloak.website.feature.billing.model.BillingDestination
-import com.mooncloak.website.feature.billing.model.PlanPaymentStatus
+import com.mooncloak.website.feature.billing.model.BillingPaymentStatus
 import com.mooncloak.website.feature.shared.composable.MooncloakTopAppBar
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -33,16 +31,12 @@ import org.jetbrains.compose.resources.stringResource
 internal fun BillingScreen(
     billingApi: BillingApi,
     clock: Clock,
-    priceFetcher: CryptoUSDPriceFetcher,
-    addressProvider: CryptoChainlinkAddressProvider,
     modifier: Modifier = Modifier
 ) {
     val viewModel = remember {
         BillingViewModel(
             billingApi = billingApi,
-            clock = clock,
-            priceFetcher = priceFetcher,
-            addressProvider = addressProvider
+            clock = clock
         )
     }
     val coroutineScope = rememberCoroutineScope()
@@ -104,7 +98,7 @@ internal fun BillingScreen(
                     BillingDestination.Success -> SuccessLayout(
                         modifier = Modifier.fillMaxSize()
                             .padding(16.dp),
-                        token = viewModel.state.current.value.paymentStatus?.token,
+                        token = viewModel.state.current.value.paymentStatusDetails?.token,
                         redirectUri = viewModel.state.current.value.redirectUri,
                         onCopiedToken = {
                             coroutineScope.launch {
@@ -116,12 +110,12 @@ internal fun BillingScreen(
                     BillingDestination.PayWithCrypto -> PayWithCryptoLayout(
                         modifier = Modifier.fillMaxSize()
                             .padding(16.dp),
-                        uri = viewModel.state.current.value.invoice?.uri,
+                        uri = viewModel.state.current.value.invoice?.paymentUri,
                         address = viewModel.state.current.value.invoice?.address,
-                        paymentStatusTitle = viewModel.state.current.value.paymentStatus?.title
+                        paymentStatusTitle = viewModel.state.current.value.paymentStatusDetails?.title
                             ?: stringResource(Res.string.label_payment_loading),
-                        paymentStatusPending = viewModel.state.current.value.paymentStatus?.let { status ->
-                            status is PlanPaymentStatus.Pending
+                        paymentStatusPending = viewModel.state.current.value.paymentStatusDetails?.status?.let { status ->
+                            status == BillingPaymentStatus.Pending
                         } ?: true,
                         paymentStatusDescription = null,
                         selectedCurrency = viewModel.state.current.value.selectedCryptoCurrency,
@@ -135,7 +129,7 @@ internal fun BillingScreen(
                             }
                         },
                         onOpenWallet = {
-                            viewModel.state.current.value.invoice?.uri?.let { walletUri ->
+                            viewModel.state.current.value.invoice?.paymentUri?.let { walletUri ->
                                 uriHandler.openUri(walletUri)
                             }
                         },
