@@ -32,7 +32,7 @@ internal class HttpBillingApi internal constructor(
 
     override suspend fun getInvoice(productId: String, token: String?, currencyCode: Currency.Code): CryptoInvoice =
         withContext(Dispatchers.Default) {
-            val response = httpClient.post(url("/billing/invoice")) {
+            val response = httpClient.post(url("/billing/payment/invoice")) {
                 token?.let { bearerAuth(it) }
 
                 contentType(ContentType.Application.Json)
@@ -52,7 +52,7 @@ internal class HttpBillingApi internal constructor(
     override suspend fun getPaymentStatus(
         token: TransactionToken
     ): BillingPaymentStatusDetails = withContext(Dispatchers.Default) {
-        val response = httpClient.get(url("/billing/status")) {
+        val response = httpClient.get(url("/billing/payment/status")) {
             bearerAuth(token.value)
 
             contentType(ContentType.Application.Json)
