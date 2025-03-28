@@ -4,6 +4,8 @@ import com.mooncloak.website.feature.billing.model.*
 
 public interface BillingApi {
 
+    public suspend fun getSupportedCryptoCurrencies(): List<Currency>
+
     public suspend fun getPlan(id: String): Plan
 
     public suspend fun getPlans(): List<Plan>

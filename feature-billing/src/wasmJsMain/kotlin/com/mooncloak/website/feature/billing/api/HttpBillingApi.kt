@@ -17,6 +17,14 @@ internal class HttpBillingApi internal constructor(
     private val hostUrlProvider: HostUrlProvider
 ) : BillingApi {
 
+    override suspend fun getSupportedCryptoCurrencies(): List<Currency> = withContext(Dispatchers.Default) {
+        val response = httpClient.get(url("/billing/currencies")) {
+            parameter("type", Currency.Type.Crypto.value)
+        }
+
+        return@withContext response.body<HttpResponseBody<CurrencyResponseBody>>().getOrThrow().currencies
+    }
+
     override suspend fun getPlan(id: String): Plan = withContext(Dispatchers.Default) {
         val response = httpClient.get(url("/billing/plan/$id"))
 
