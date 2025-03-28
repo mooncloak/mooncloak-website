@@ -13,7 +13,7 @@ public abstract class BaseBillingFeature internal constructor() : Feature {
 
     final override val pathPart: String = "feature-billing"
 
-    final override val title: String = "Choose your payment method"
+    final override val title: String = "Billing - mooncloak"
 
     final override val description: String =
         "Go Dark, Stay Bright with mooncloak VPN. Enjoy private, fast, secure browsing and shield yourself from data creeps. Try it now!"
