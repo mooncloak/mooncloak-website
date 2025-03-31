@@ -107,6 +107,10 @@ internal fun BillingScreen(
                         }
                     )
 
+                    BillingDestination.Failed -> {
+                        // TODO: Failed layout.
+                    }
+
                     BillingDestination.PayWithCrypto -> PayWithCryptoLayout(
                         modifier = Modifier.fillMaxSize()
                             .padding(16.dp),

@@ -30,5 +30,12 @@ public sealed interface BillingDestination {
         override val path: String = "/billing/success"
     }
 
+    @Immutable
+    @Serializable
+    public data object Failed : BillingDestination {
+
+        override val path: String = "/billing/failed"
+    }
+
     public companion object
 }

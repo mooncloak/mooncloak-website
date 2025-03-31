@@ -28,9 +28,10 @@ public class BillingViewModel public constructor(
         coroutineScope.launch {
             mutex.withLock {
                 var selectedPlan: Plan? = null
-                var token: String? = null
+                var token: TransactionToken? = null
                 var invoice: CryptoInvoice? = null
-                var paymentStatus: BillingPaymentStatusDetails? = null
+                var paymentStatus: BillingPaymentStatus? = null
+                var paymentStatusDetails: BillingPaymentStatusDetails? = null
                 var queryParameters = QueryParameters()
                 var plans = emptyList<Plan>()
 
@@ -41,7 +42,9 @@ public class BillingViewModel public constructor(
 
                     val productId = queryParameters["product_id"] ?: queryParameters["plan_id"]
 
-                    token = queryParameters["token"]
+                    token = queryParameters["token"]?.let { TransactionToken(value = it) }
+
+                    paymentStatus = queryParameters["status"]?.let { BillingPaymentStatus(value = it) }
 
                     val productDeferred = async { getPlan(id = productId) }
                     val plansDeferred = async { getPlans() }
@@ -50,13 +53,13 @@ public class BillingViewModel public constructor(
                     val currency = currentState.selectedCryptoCurrency
 
                     invoice = currentState.invoices[currency]
-                    paymentStatus = currentState.paymentStatusDetails
+                    paymentStatusDetails = currentState.paymentStatusDetails
 
                     val invoiceDeferred = async {
                         if (invoice == null && productId != null) {
                             invoice = getInvoice(
                                 productId = productId,
-                                token = currentState.token,
+                                token = currentState.token?.value,
                                 currencyCode = currentState.selectedCryptoCurrency.currencyCode,
                                 currentInvoices = currentState.invoices
                             )
@@ -68,7 +71,7 @@ public class BillingViewModel public constructor(
                     }
 
                     selectedPlan = productDeferred.await()
-                    paymentStatus = invoiceDeferred.await()
+                    paymentStatusDetails = invoiceDeferred.await()
                     plans = plansDeferred.await()
 
                     emit { current ->
@@ -80,8 +83,13 @@ public class BillingViewModel public constructor(
                             invoices = current.invoices.toMutableMap()
                                 .apply { this[currency] = invoice }
                                 .toMap(),
-                            paymentStatusDetails = paymentStatus,
-                            queryParameters = queryParameters
+                            paymentStatusDetails = paymentStatusDetails,
+                            queryParameters = queryParameters,
+                            startDestination = when (paymentStatus) {
+                                BillingPaymentStatus.Completed -> BillingDestination.Success
+                                BillingPaymentStatus.Failed -> BillingDestination.Failed
+                                else -> BillingDestination.Landing
+                            }
                         )
                     }
                 } catch (e: Exception) {
@@ -96,8 +104,13 @@ public class BillingViewModel public constructor(
                             selectedPlan = selectedPlan,
                             plans = plans,
                             token = token,
-                            paymentStatusDetails = paymentStatus,
+                            paymentStatusDetails = paymentStatusDetails,
                             queryParameters = queryParameters,
+                            startDestination = when (paymentStatus) {
+                                BillingPaymentStatus.Completed -> BillingDestination.Success
+                                BillingPaymentStatus.Failed -> BillingDestination.Failed
+                                else -> BillingDestination.Landing
+                            },
                             errorMessage = NotificationStateModel(message = getString(Res.string.error_loading_billing))
                         )
                     }
@@ -136,7 +149,7 @@ public class BillingViewModel public constructor(
                     if (invoice == null && productId != null) {
                         invoice = getInvoice(
                             productId = productId,
-                            token = currentState.token,
+                            token = currentState.token?.value,
                             currencyCode = currentState.selectedCryptoCurrency.currencyCode,
                             currentInvoices = currentState.invoices
                         )

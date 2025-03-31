@@ -18,7 +18,7 @@ public data class BillingStateModel public constructor(
     public val paymentStatusDetails: BillingPaymentStatusDetails? = null,
     public val selectedPlan: Plan? = null,
     public val plans: List<Plan> = emptyList(),
-    public val token: String? = null,
+    public val token: TransactionToken? = null,
     public val isLoading: Boolean = false,
     public val successMessage: NotificationStateModel? = null,
     public val errorMessage: NotificationStateModel? = null
