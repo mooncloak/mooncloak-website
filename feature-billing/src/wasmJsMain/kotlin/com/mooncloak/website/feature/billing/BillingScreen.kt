@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.mooncloak.moonscape.snackbar.MooncloakSnackbar
+import com.mooncloak.moonscape.snackbar.showError
 import com.mooncloak.moonscape.snackbar.showSuccess
 import com.mooncloak.website.feature.billing.api.BillingApi
 import com.mooncloak.website.feature.billing.layout.LandingLayout
@@ -168,7 +169,7 @@ internal fun BillingScreen(
 
     LaunchedEffect(viewModel.state.current.value.errorMessage) {
         viewModel.state.current.value.errorMessage?.let { notification ->
-            snackbarHostState.showSuccess(notification = notification)
+            snackbarHostState.showError(notification = notification)
         }
     }
 }
