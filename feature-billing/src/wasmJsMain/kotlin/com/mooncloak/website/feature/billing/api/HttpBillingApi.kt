@@ -61,7 +61,7 @@ internal class HttpBillingApi internal constructor(
         token: TransactionToken
     ): BillingPaymentStatusDetails = withContext(Dispatchers.Default) {
         val response = httpClient.get(url("/billing/payment/status")) {
-            bearerAuth(token.value)
+            headers.set(TransactionToken.HEADER_KEY, token.value)
 
             contentType(ContentType.Application.Json)
             accept(ContentType.Application.Json)

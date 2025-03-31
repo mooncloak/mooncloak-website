@@ -12,4 +12,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 public value class TransactionToken public constructor(
     public val value: String
-)
+) {
+
+    public companion object {
+
+        public const val HEADER_KEY: String = "X-Transaction-Token"
+    }
+}
