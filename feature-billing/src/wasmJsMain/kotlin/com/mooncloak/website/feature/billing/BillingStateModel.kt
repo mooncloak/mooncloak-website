@@ -1,6 +1,8 @@
 package com.mooncloak.website.feature.billing
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.text.AnnotatedString
 import com.mooncloak.moonscape.snackbar.NotificationStateModel
 import com.mooncloak.website.feature.billing.external.QueryParameters
 import com.mooncloak.website.feature.billing.model.*
@@ -19,6 +21,9 @@ public data class BillingStateModel public constructor(
     public val selectedPlan: Plan? = null,
     public val plans: List<Plan> = emptyList(),
     public val token: TransactionToken? = null,
+    public val acceptedTerms: Boolean = false,
+    public val termsAndConditionsText: @Composable () -> AnnotatedString = { AnnotatedString("") },
+    public val noticeText: String? = null,
     public val isLoading: Boolean = false,
     public val successMessage: NotificationStateModel? = null,
     public val errorMessage: NotificationStateModel? = null

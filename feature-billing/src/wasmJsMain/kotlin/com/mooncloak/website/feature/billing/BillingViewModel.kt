@@ -1,5 +1,12 @@
 package com.mooncloak.website.feature.billing
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.style.TextDecoration
 import com.mooncloak.kodetools.logpile.core.LogPile
 import com.mooncloak.kodetools.logpile.core.error
 import com.mooncloak.kodetools.statex.ViewModel
@@ -34,6 +41,7 @@ public class BillingViewModel public constructor(
                 var paymentStatusDetails: BillingPaymentStatusDetails? = null
                 var queryParameters = QueryParameters()
                 var plans = emptyList<Plan>()
+                var termsAndConditionsText: (@Composable () -> AnnotatedString) = { AnnotatedString("") }
 
                 try {
                     emit { current -> current.copy(isLoading = true) }
@@ -45,6 +53,8 @@ public class BillingViewModel public constructor(
                     token = queryParameters["token"]?.let { TransactionToken(value = it) }
 
                     paymentStatus = queryParameters["status"]?.let { BillingPaymentStatus(value = it) }
+
+                    termsAndConditionsText = getTermsAndConditionsText()
 
                     val productDeferred = async { getPlan(id = productId) }
                     val plansDeferred = async { getPlans() }
@@ -89,7 +99,8 @@ public class BillingViewModel public constructor(
                                 BillingPaymentStatus.Completed -> BillingDestination.Success
                                 BillingPaymentStatus.Failed -> BillingDestination.Failed
                                 else -> BillingDestination.Landing
-                            }
+                            },
+                            termsAndConditionsText = termsAndConditionsText
                         )
                     }
                 } catch (e: Exception) {
@@ -111,6 +122,7 @@ public class BillingViewModel public constructor(
                                 BillingPaymentStatus.Failed -> BillingDestination.Failed
                                 else -> BillingDestination.Landing
                             },
+                            termsAndConditionsText = termsAndConditionsText,
                             errorMessage = NotificationStateModel(message = getString(Res.string.error_loading_billing))
                         )
                     }
@@ -248,6 +260,18 @@ public class BillingViewModel public constructor(
         }
     }
 
+    public fun toggleAcceptTerms(accepted: Boolean) {
+        coroutineScope.launch {
+            mutex.withLock {
+                emit { current ->
+                    current.copy(
+                        acceptedTerms = accepted
+                    )
+                }
+            }
+        }
+    }
+
     private suspend fun getPlans(): List<Plan> =
         billingApi.getPlans()
             .filter { plan -> plan.isAvailable(at = clock.now()) }
@@ -271,5 +295,59 @@ public class BillingViewModel public constructor(
             token = token,
             currencyCode = currencyCode
         )
+    }
+
+    private suspend fun getTermsAndConditionsText(): (@Composable () -> AnnotatedString) {
+        val acceptTermsAndConditionsText = getString(Res.string.payment_accept_terms_and_conditions)
+        val termsLinkText = getString(Res.string.payment_link_text_terms)
+        val privacyPolicyLinkText = getString(Res.string.payment_link_text_privacy_policy)
+        val indexOfTerms = acceptTermsAndConditionsText.indexOf(termsLinkText)
+        val indexOfPrivacyPolicy = acceptTermsAndConditionsText.indexOf(privacyPolicyLinkText)
+
+        return {
+            AnnotatedString.Builder().apply {
+                append(acceptTermsAndConditionsText)
+
+                if (indexOfTerms != -1) {
+                    addLink(
+                        url = LinkAnnotation.Url(
+                            url = "https://mooncloak.com/legal/terms",
+                            styles = TextLinkStyles(
+                                style = SpanStyle(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    textDecoration = TextDecoration.Underline
+                                ),
+                                pressedStyle = SpanStyle(
+                                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                                    textDecoration = TextDecoration.Underline
+                                )
+                            )
+                        ),
+                        start = indexOfTerms,
+                        end = indexOfTerms + termsLinkText.length
+                    )
+                }
+
+                if (indexOfPrivacyPolicy != -1) {
+                    addLink(
+                        url = LinkAnnotation.Url(
+                            url = "https://mooncloak.com/legal/privacy",
+                            styles = TextLinkStyles(
+                                style = SpanStyle(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    textDecoration = TextDecoration.Underline
+                                ),
+                                pressedStyle = SpanStyle(
+                                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                                    textDecoration = TextDecoration.Underline
+                                )
+                            )
+                        ),
+                        start = indexOfPrivacyPolicy,
+                        end = indexOfPrivacyPolicy + privacyPolicyLinkText.length
+                    )
+                }
+            }.toAnnotatedString()
+        }
     }
 }

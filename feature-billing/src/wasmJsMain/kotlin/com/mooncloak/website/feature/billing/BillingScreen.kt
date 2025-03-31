@@ -92,7 +92,11 @@ internal fun BillingScreen(
                         onPayWithCrypto = {
                             destination.value = BillingDestination.PayWithCrypto
                         },
-                        onPlanSelected = viewModel::selectPlan
+                        onPlanSelected = viewModel::selectPlan,
+                        noticeText = viewModel.state.current.value.noticeText,
+                        termsAndConditionsText = viewModel.state.current.value.termsAndConditionsText.invoke(),
+                        acceptedTerms = viewModel.state.current.value.acceptedTerms,
+                        onAcceptedTermsToggled = viewModel::toggleAcceptTerms
                     )
 
                     BillingDestination.Success -> SuccessLayout(
