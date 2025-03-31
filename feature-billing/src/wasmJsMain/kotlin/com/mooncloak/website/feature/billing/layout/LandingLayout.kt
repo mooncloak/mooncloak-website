@@ -39,7 +39,8 @@ internal fun LandingLayout(
         ) {
             PlansContainer(
                 modifier = Modifier.sizeIn(maxWidth = 600.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(top = 32.dp),
                 selectedPlan = selectedPlan,
                 plans = plans,
                 onPlanSelected = onPlanSelected

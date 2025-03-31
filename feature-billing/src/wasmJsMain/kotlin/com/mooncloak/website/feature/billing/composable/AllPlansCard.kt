@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.mooncloak.moonscape.theme.MooncloakTheme
 import com.mooncloak.website.feature.billing.*
@@ -16,13 +17,15 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun AllPlansCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.onBackground
+            containerColor = containerColor,
+            contentColor = contentColor
         )
     ) {
         Column(
@@ -32,7 +35,7 @@ internal fun AllPlansCard(
             Text(
                 text = stringResource(Res.string.payment_all_plans_title),
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = MooncloakTheme.alphas.secondary)
+                color = contentColor.copy(alpha = MooncloakTheme.alphas.secondary)
             )
 
             PlanFeatureRow(

@@ -45,8 +45,13 @@ internal fun PlansContainer(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        AllPlansCard(
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Text(
-            modifier = Modifier.align(Alignment.Start),
+            modifier = Modifier.align(Alignment.Start)
+                .padding(top = 32.dp),
             text = stringResource(Res.string.label_selected_plan),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = MooncloakTheme.alphas.secondary)
@@ -75,12 +80,6 @@ internal fun PlansContainer(
                 onDismissRequest = { dropdownExpanded.value = false },
                 shape = RoundedCornerShape(10.dp)
             ) {
-                AllPlansCard(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-                        .padding(bottom = 12.dp)
-                )
-
                 plans.forEachIndexed { index, plan ->
                     DropdownMenuItem(
                         modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
