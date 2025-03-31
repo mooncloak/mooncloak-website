@@ -40,3 +40,6 @@ public val BillingStateModel.priceText: String?
 
         return "$localFormatted - $cryptoFormatted"
     }
+
+public val BillingStateModel.payButtonsEnabled: Boolean
+    inline get() = this.acceptedTerms && this.selectedPlan != null

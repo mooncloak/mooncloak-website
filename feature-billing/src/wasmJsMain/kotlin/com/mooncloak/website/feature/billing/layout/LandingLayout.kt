@@ -27,6 +27,7 @@ internal fun LandingLayout(
     plans: List<Plan>,
     noticeText: String?,
     termsAndConditionsText: AnnotatedString,
+    payButtonsEnabled: Boolean,
     acceptedTerms: Boolean,
     onAcceptedTermsToggled: (accepted: Boolean) -> Unit,
     onPayWithCard: () -> Unit,
@@ -82,7 +83,7 @@ internal fun LandingLayout(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
-                    enabled = acceptedTerms,
+                    enabled = payButtonsEnabled,
                     onClick = onPayWithCard
                 ) {
                     Icon(
@@ -105,7 +106,7 @@ internal fun LandingLayout(
                         containerColor = MaterialTheme.colorScheme.secondary,
                         contentColor = MaterialTheme.colorScheme.onSecondary
                     ),
-                    enabled = acceptedTerms,
+                    enabled = payButtonsEnabled,
                     onClick = onPayWithCrypto
                 ) {
                     Icon(

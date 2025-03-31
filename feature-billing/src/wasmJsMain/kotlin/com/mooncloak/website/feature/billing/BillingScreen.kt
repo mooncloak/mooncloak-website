@@ -86,6 +86,10 @@ internal fun BillingScreen(
                             .padding(16.dp),
                         selectedPlan = viewModel.state.current.value.selectedPlan,
                         plans = viewModel.state.current.value.plans,
+                        noticeText = viewModel.state.current.value.noticeText,
+                        termsAndConditionsText = viewModel.state.current.value.termsAndConditionsText.invoke(),
+                        acceptedTerms = viewModel.state.current.value.acceptedTerms,
+                        payButtonsEnabled = viewModel.state.current.value.payButtonsEnabled,
                         onPayWithCard = {
                             uriHandler.openUri(viewModel.state.current.value.billingCardPaymentUri)
                         },
@@ -93,9 +97,6 @@ internal fun BillingScreen(
                             destination.value = BillingDestination.PayWithCrypto
                         },
                         onPlanSelected = viewModel::selectPlan,
-                        noticeText = viewModel.state.current.value.noticeText,
-                        termsAndConditionsText = viewModel.state.current.value.termsAndConditionsText.invoke(),
-                        acceptedTerms = viewModel.state.current.value.acceptedTerms,
                         onAcceptedTermsToggled = viewModel::toggleAcceptTerms
                     )
 
