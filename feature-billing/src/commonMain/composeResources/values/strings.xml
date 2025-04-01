@@ -19,10 +19,12 @@
     <string name="action_navigate_back">Go back</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_open_app">Open app</string>
+    <string name="action_try_again">Try again</string>
 
     <string name="title_loading_product_details">Loading product details...</string>
     <string name="title_select_plan">Select a plan</string>
     <string name="title_success">Thank you for your payment!</string>
+    <string name="title_failed">Payment unsuccessful</string>
 
     <string name="label_qr_scan">Scan to pay with your crypto wallet app.</string>
     <string name="label_crypto_address">Crypto Address</string>

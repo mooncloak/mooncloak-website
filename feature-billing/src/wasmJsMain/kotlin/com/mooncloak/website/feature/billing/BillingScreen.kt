@@ -16,6 +16,7 @@ import com.mooncloak.moonscape.snackbar.MooncloakSnackbar
 import com.mooncloak.moonscape.snackbar.showError
 import com.mooncloak.moonscape.snackbar.showSuccess
 import com.mooncloak.website.feature.billing.api.BillingApi
+import com.mooncloak.website.feature.billing.layout.FailedLayout
 import com.mooncloak.website.feature.billing.layout.LandingLayout
 import com.mooncloak.website.feature.billing.layout.PayWithCryptoLayout
 import com.mooncloak.website.feature.billing.layout.SuccessLayout
@@ -113,9 +114,13 @@ internal fun BillingScreen(
                         }
                     )
 
-                    BillingDestination.Failed -> {
-                        // TODO: Failed layout.
-                    }
+                    BillingDestination.Failed -> FailedLayout(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(16.dp),
+                        onRetry = {
+                            destination.value = BillingDestination.Landing
+                        }
+                    )
 
                     BillingDestination.PayWithCrypto -> {
                         LaunchedEffect(targetDestination) {
