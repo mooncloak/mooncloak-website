@@ -43,7 +43,7 @@ import kotlinx.serialization.Serializable
 @Immutable
 @Serializable
 public data class CryptoInvoice public constructor(
-    @SerialName(value = "type") public val type: String,
+    @SerialName(value = "type") public val type: String = "crypto",
     @SerialName(value = "id") public val id: String,
     @SerialName(value = "product_id") public val planId: String,
     @SerialName(value = "token") public val token: TransactionToken,
