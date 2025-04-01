@@ -122,7 +122,7 @@ public class BillingViewModel public constructor(
                     val currency = currentState.selectedCryptoCurrency
                     var invoice = currentState.invoice
 
-                    if (invoice == null && productId != null) {
+                    if (invoice == null) {
                         invoice = getInvoice(
                             productId = productId,
                             token = currentState.token?.value,
