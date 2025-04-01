@@ -117,36 +117,42 @@ internal fun BillingScreen(
                         // TODO: Failed layout.
                     }
 
-                    BillingDestination.PayWithCrypto -> PayWithCryptoLayout(
-                        modifier = Modifier.fillMaxSize()
-                            .padding(16.dp),
-                        uri = viewModel.state.current.value.invoice?.paymentUri,
-                        address = viewModel.state.current.value.invoice?.address,
-                        priceTitle = viewModel.state.current.value.priceText,
-                        paymentStatusTitle = viewModel.state.current.value.paymentStatusDetails?.title
-                            ?: stringResource(Res.string.label_payment_loading),
-                        paymentStatusPending = viewModel.state.current.value.paymentStatusDetails?.status?.let { status ->
-                            status == BillingPaymentStatus.Pending
-                        } ?: true,
-                        paymentStatusDescription = null,
-                        selectedCurrency = viewModel.state.current.value.selectedCryptoCurrency,
-                        currencies = viewModel.state.current.value.cryptoCurrencies,
-                        actionOpenVisible = viewModel.state.current.value.invoice != null,
-                        actionOpenEnabled = true,
-                        actionRefreshVisible = viewModel.state.current.value.invoice != null,
-                        onCopiedAddress = {
-                            coroutineScope.launch {
-                                snackbarHostState.showSuccess(message = getString(Res.string.success_copied_address))
-                            }
-                        },
-                        onOpenWallet = {
-                            viewModel.state.current.value.invoice?.paymentUri?.let { walletUri ->
-                                uriHandler.openUri(walletUri)
-                            }
-                        },
-                        onRefreshStatus = viewModel::refreshStatus,
-                        onCurrencySelected = viewModel::selectCurrency
-                    )
+                    BillingDestination.PayWithCrypto -> {
+                        LaunchedEffect(targetDestination) {
+                            viewModel.loadInvoice()
+                        }
+
+                        PayWithCryptoLayout(
+                            modifier = Modifier.fillMaxSize()
+                                .padding(16.dp),
+                            uri = viewModel.state.current.value.invoice?.paymentUri,
+                            address = viewModel.state.current.value.invoice?.address,
+                            priceTitle = viewModel.state.current.value.priceText,
+                            paymentStatusTitle = viewModel.state.current.value.paymentStatusDetails?.title
+                                ?: stringResource(Res.string.label_payment_loading),
+                            paymentStatusPending = viewModel.state.current.value.paymentStatusDetails?.status?.let { status ->
+                                status == BillingPaymentStatus.Pending
+                            } ?: true,
+                            paymentStatusDescription = null,
+                            selectedCurrency = viewModel.state.current.value.selectedCryptoCurrency,
+                            currencies = viewModel.state.current.value.cryptoCurrencies,
+                            actionOpenVisible = viewModel.state.current.value.invoice != null,
+                            actionOpenEnabled = true,
+                            actionRefreshVisible = viewModel.state.current.value.invoice != null,
+                            onCopiedAddress = {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSuccess(message = getString(Res.string.success_copied_address))
+                                }
+                            },
+                            onOpenWallet = {
+                                viewModel.state.current.value.invoice?.paymentUri?.let { walletUri ->
+                                    uriHandler.openUri(walletUri)
+                                }
+                            },
+                            onRefreshStatus = viewModel::refreshStatus,
+                            onCurrencySelected = viewModel::selectCurrency
+                        )
+                    }
                 }
             }
 

@@ -36,9 +36,7 @@ public class BillingViewModel public constructor(
             mutex.withLock {
                 var selectedPlan: Plan? = null
                 var token: TransactionToken? = null
-                var invoice: CryptoInvoice? = null
                 var paymentStatus: BillingPaymentStatus? = null
-                var paymentStatusDetails: BillingPaymentStatusDetails? = null
                 var queryParameters = QueryParameters()
                 var plans = emptyList<Plan>()
                 var termsAndConditionsText: (@Composable () -> AnnotatedString) = { AnnotatedString("") }
@@ -58,28 +56,6 @@ public class BillingViewModel public constructor(
 
                     val plansDeferred = async { getPlans() }
 
-                    val currentState = state.current.value
-                    val currency = currentState.selectedCryptoCurrency
-
-                    invoice = currentState.invoices[currency]
-                    paymentStatusDetails = currentState.paymentStatusDetails
-
-                    val invoiceDeferred = async {
-                        if (invoice == null && productId != null) {
-                            invoice = getInvoice(
-                                productId = productId,
-                                token = currentState.token?.value,
-                                currencyCode = currentState.selectedCryptoCurrency.currencyCode,
-                                currentInvoices = currentState.invoices
-                            )
-                        }
-
-                        invoice?.let {
-                            billingApi.getPaymentStatus(token = it.token)
-                        }
-                    }
-
-                    paymentStatusDetails = invoiceDeferred.await()
                     plans = plansDeferred.await()
                     selectedPlan = plans.firstOrNull { plan -> plan.id == productId }
 
@@ -89,10 +65,6 @@ public class BillingViewModel public constructor(
                             selectedPlan = selectedPlan,
                             plans = plans,
                             token = token,
-                            invoices = current.invoices.toMutableMap()
-                                .apply { this[currency] = invoice }
-                                .toMap(),
-                            paymentStatusDetails = paymentStatusDetails,
                             queryParameters = queryParameters,
                             startDestination = when (paymentStatus) {
                                 BillingPaymentStatus.Completed -> BillingDestination.Success
@@ -114,7 +86,6 @@ public class BillingViewModel public constructor(
                             selectedPlan = selectedPlan,
                             plans = plans,
                             token = token,
-                            paymentStatusDetails = paymentStatusDetails,
                             queryParameters = queryParameters,
                             startDestination = when (paymentStatus) {
                                 BillingPaymentStatus.Completed -> BillingDestination.Success
@@ -137,6 +108,52 @@ public class BillingViewModel public constructor(
                     current.copy(
                         selectedPlan = plan
                     )
+                }
+            }
+        }
+    }
+
+    public fun loadInvoice() {
+        coroutineScope.launch {
+            mutex.withLock {
+                try {
+                    val currentState = state.current.value
+                    val productId = currentState.selectedPlan?.id
+                    val currency = currentState.selectedCryptoCurrency
+                    var invoice = currentState.invoice
+
+                    if (invoice == null && productId != null) {
+                        invoice = getInvoice(
+                            productId = productId,
+                            token = currentState.token?.value,
+                            currencyCode = currentState.selectedCryptoCurrency.currencyCode,
+                            currentInvoices = currentState.invoices
+                        )
+                    }
+
+                    invoice?.let {
+                        billingApi.getPaymentStatus(token = it.token)
+                    }
+
+                    emit { current ->
+                        current.copy(
+                            invoices = current.invoices.toMutableMap()
+                                .apply { this[currency] = invoice }
+                                .toMap(),
+                        )
+                    }
+                } catch (e: Exception) {
+                    LogPile.error(
+                        message = "Error fetching invoice.",
+                        cause = e
+                    )
+
+                    emit { current ->
+                        current.copy(
+                            isLoading = false,
+                            errorMessage = NotificationStateModel(message = getString(Res.string.error_loading_crypto_details))
+                        )
+                    }
                 }
             }
         }
