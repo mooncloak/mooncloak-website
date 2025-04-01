@@ -125,7 +125,6 @@ public class BillingViewModel public constructor(
                     if (invoice == null) {
                         invoice = getInvoice(
                             productId = productId,
-                            token = currentState.token?.value,
                             currencyCode = currentState.selectedCryptoCurrency.currencyCode,
                             currentInvoices = currentState.invoices
                         )
@@ -177,7 +176,6 @@ public class BillingViewModel public constructor(
                     if (invoice == null && productId != null) {
                         invoice = getInvoice(
                             productId = productId,
-                            token = currentState.token?.value,
                             currencyCode = currentState.selectedCryptoCurrency.currencyCode,
                             currentInvoices = currentState.invoices
                         )
@@ -299,7 +297,6 @@ public class BillingViewModel public constructor(
     private suspend fun getInvoice(
         currencyCode: Currency.Code,
         productId: String?,
-        token: String?,
         currentInvoices: Map<CryptoCurrency, CryptoInvoice?>
     ): CryptoInvoice? {
         CryptoCurrency[currencyCode]?.let { currentInvoices[it] }?.let { return it }
@@ -308,7 +305,6 @@ public class BillingViewModel public constructor(
 
         return billingApi.getInvoice(
             productId = productId,
-            token = token,
             currencyCode = currencyCode
         )
     }
