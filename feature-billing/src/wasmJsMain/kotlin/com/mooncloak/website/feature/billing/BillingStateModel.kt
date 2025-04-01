@@ -20,7 +20,7 @@ public data class BillingStateModel public constructor(
     public val paymentStatusDetails: BillingPaymentStatusDetails? = null,
     public val selectedPlan: Plan? = null,
     public val plans: List<Plan> = emptyList(),
-    public val token: TransactionToken? = null,
+    public val transactionToken: TransactionToken? = null,
     public val acceptedTerms: Boolean = false,
     public val termsAndConditionsText: @Composable () -> AnnotatedString = { AnnotatedString("") },
     public val noticeText: String? = null,

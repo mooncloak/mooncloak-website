@@ -64,7 +64,7 @@ public class BillingViewModel public constructor(
                             isLoading = false,
                             selectedPlan = selectedPlan,
                             plans = plans,
-                            token = token,
+                            transactionToken = token,
                             queryParameters = queryParameters,
                             startDestination = when (paymentStatus) {
                                 BillingPaymentStatus.Completed -> BillingDestination.Success
@@ -85,7 +85,7 @@ public class BillingViewModel public constructor(
                             isLoading = false,
                             selectedPlan = selectedPlan,
                             plans = plans,
-                            token = token,
+                            transactionToken = token,
                             queryParameters = queryParameters,
                             startDestination = when (paymentStatus) {
                                 BillingPaymentStatus.Completed -> BillingDestination.Success
@@ -126,7 +126,8 @@ public class BillingViewModel public constructor(
                         invoice = getInvoice(
                             productId = productId,
                             currencyCode = currentState.selectedCryptoCurrency.currencyCode,
-                            currentInvoices = currentState.invoices
+                            currentInvoices = currentState.invoices,
+                            accessToken = currentState.queryParameters["access_token"]
                         )
                     }
 
@@ -177,7 +178,8 @@ public class BillingViewModel public constructor(
                         invoice = getInvoice(
                             productId = productId,
                             currencyCode = currentState.selectedCryptoCurrency.currencyCode,
-                            currentInvoices = currentState.invoices
+                            currentInvoices = currentState.invoices,
+                            accessToken = currentState.queryParameters["access_token"]
                         )
                     }
 
@@ -291,12 +293,10 @@ public class BillingViewModel public constructor(
             .filter { plan -> plan.isAvailable(at = clock.now()) }
             .sortedBy { plan -> plan.price.amount }
 
-    private suspend fun getPlan(id: String?): Plan? =
-        id?.let { billingApi.getPlan(id = it) }
-
     private suspend fun getInvoice(
         currencyCode: Currency.Code,
         productId: String?,
+        accessToken: String?,
         currentInvoices: Map<CryptoCurrency, CryptoInvoice?>
     ): CryptoInvoice? {
         CryptoCurrency[currencyCode]?.let { currentInvoices[it] }?.let { return it }
@@ -305,7 +305,8 @@ public class BillingViewModel public constructor(
 
         return billingApi.getInvoice(
             productId = productId,
-            currencyCode = currencyCode
+            currencyCode = currencyCode,
+            accessToken = accessToken
         )
     }
 

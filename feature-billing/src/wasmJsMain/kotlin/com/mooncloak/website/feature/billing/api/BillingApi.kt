@@ -12,7 +12,7 @@ public interface BillingApi {
 
     public suspend fun getInvoice(
         productId: String,
-        token: String? = null,
+        accessToken: String? = null,
         currencyCode: Currency.Code
     ): CryptoInvoice
 
