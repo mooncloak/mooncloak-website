@@ -51,7 +51,7 @@ internal class HttpBillingApi internal constructor(
                 accept(ContentType.Application.Json)
 
                 parameter(key = GetPaymentInvoiceRequestBody.Key.PRODUCT_ID, value = productId)
-                parameter(key = GetPaymentInvoiceRequestBody.Key.CURRENCY_CODE, value = currencyCode)
+                parameter(key = GetPaymentInvoiceRequestBody.Key.CURRENCY_CODE, value = currencyCode.value)
             }
 
             return@withContext response.body<HttpResponseBody<CryptoInvoice>>().getOrThrow()
