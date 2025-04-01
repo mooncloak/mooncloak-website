@@ -56,7 +56,6 @@ public class BillingViewModel public constructor(
 
                     termsAndConditionsText = getTermsAndConditionsText()
 
-                    val productDeferred = async { getPlan(id = productId) }
                     val plansDeferred = async { getPlans() }
 
                     val currentState = state.current.value
@@ -80,9 +79,9 @@ public class BillingViewModel public constructor(
                         }
                     }
 
-                    selectedPlan = productDeferred.await()
                     paymentStatusDetails = invoiceDeferred.await()
                     plans = plansDeferred.await()
+                    selectedPlan = plans.firstOrNull { plan -> plan.id == productId }
 
                     emit { current ->
                         current.copy(
